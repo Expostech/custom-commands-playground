@@ -1,5 +1,5 @@
 //import './editor.css';
-import React from 'react'
+import React, { Fragment } from 'react'
 import { store, view } from '@risingstack/react-easy-state';
 import parseTemplate from '../customCommands/parseTemplate'
 import playerData from '../customCommands/dataPresets/player'
@@ -47,6 +47,9 @@ const Output = view(() => {
   let result
   try {
     result = parseTemplate(Store.input, data)
+      .split(';')
+      .map(_ => (<Fragment>{_}<br /></Fragment>))
+    console.log(result);
   } catch (error) {
     result = "Invalid template, " + error
   }
