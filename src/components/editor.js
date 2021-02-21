@@ -25,7 +25,7 @@ export default function Editor() {
   return (
     <div className="container">
       <div className="container flex flex-row">
-        <div className="p-5">
+        <div className="p-3">
           <div className="py-1"><Presets /></div>
           <div className="py-1"><Data /></div>
         </div>
@@ -33,7 +33,7 @@ export default function Editor() {
       </div>
       <div className="container">
         <h1 className="font-extrabold text-xl">Output</h1>
-        <div className="p-5"><Output /></div>
+        <div className="p-3"><Output /></div>
       </div>
     </div>
   );
@@ -43,7 +43,7 @@ const Output = view(() => {
   let data
 
   try {
-    data = JSON.parse(Store.data)
+    data = Store.data
   } catch (error) {
     data = null
   }
@@ -56,7 +56,7 @@ const Output = view(() => {
   }
 
   return (
-    <div className="bg-indigo-400 h-96 rounded-lg p-3">
+    <div className="bg-green-600 h-96 rounded-lg p-3">
       {result}
     </div>
   );
@@ -64,18 +64,14 @@ const Output = view(() => {
 
 const Data = view(() => {
   return (
-    <div className="text-sm overflow-auto h-96 w-full  bg-indigo-400 rounded-lg">
-      <ReactJson theme="monokai" src={Store.data} />
+    <div className="text-sm overflow-auto h-96 w-full  bg-green-600 rounded-lg">
+      <ReactJson
+        enableClipboard={false}
+        displayDataTypes={false}
+        quotesOnKeys={false}
+        theme="monokai" src={Store.data}
+      />
     </div>
-    /*     <div className="text-sm overflow-auto h-96 w-96  bg-indigo-400 rounded-lg">
-          <pre>
-            <code >
-              {}
-            </code>
-          </pre>
-        </div> */
-
-
   );
 })
 
@@ -91,7 +87,7 @@ const Presets = view(() => {
   }
 
   return (
-    <select className="text-black bg-indigo-400 rounded-lg p-1" onChange={select}>
+    <select className="text-black bg-white rounded-lg p-1" onChange={select}>
       {temp}
     </select>
   );
@@ -102,7 +98,7 @@ const Input = view(() => {
     <div className="w-full h-full">
       <h1 className="font-extrabold text-xl">Input</h1>
       <textarea
-        className="bg-indigo-400 h-full w-full rounded-lg p-5"
+        className="bg-green-600 h-full w-full rounded-lg p-5"
         value={Store.input}
         onChange={e => (Store.input = e.target.value)}
       />
