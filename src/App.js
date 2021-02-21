@@ -1,7 +1,9 @@
 import Editor from './components/editor'
+import Sidenav from './components/sidenav';
 function App() {
   return (
-    <div>
+    <div className="flex flex-row">
+      <Sidenav></Sidenav>
       <Editor></Editor>
     </div>
   );
