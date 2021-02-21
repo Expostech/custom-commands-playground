@@ -1,0 +1,41 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 2% 2%;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.output {
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.5fr 1fr;
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.presets {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.input {
+    background-color: #585d68;
+    color: white;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+.data {
+    font-size: small;
+    height: auto;
+    width: 100%;
+    overflow-y: auto;
+    grid-area: 2 / 2 / 3 / 2;
+}
