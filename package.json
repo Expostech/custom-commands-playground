@@ -2,6 +2,7 @@
   "name": "custom-command-templates",
   "version": "0.1.0",
   "private": true,
+  "homepage": "custom-commands-playground",
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@risingstack/react-easy-state": "^6.3.0",
