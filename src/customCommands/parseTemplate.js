@@ -21,6 +21,5 @@ Handlebars.registerHelper('ne', function (a, b) {
 
 export default function parseTemplate(template, data) {
     const compiled = Handlebars.compile(template)
-    console.log(data);
     return compiled(data)
 }

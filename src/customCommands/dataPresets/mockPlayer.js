@@ -23,7 +23,7 @@ function mockPlayer() {
         "zombieKills": faker.random.number(),
         "playerKills": faker.random.number(),
         "score": faker.random.number(),
-        "level": faker.random.number(),
+        "level": faker.random.number({ max: 200 }),
         "lastTeleportTime": faker.date.past(),
         "server": 1,
         "user": 1,

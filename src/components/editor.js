@@ -6,8 +6,9 @@ import playerData from '../customCommands/dataPresets/player'
 import cronData from '../customCommands/dataPresets/cron'
 import hookData from "../customCommands/dataPresets/hook"
 import ReactJson from 'react-json-view'
+import H1 from './H1'
 
-const Store = store({
+export const Store = store({
   input: `
   pm {{player.steamId}} "Hey {{player.name}} hows it going?"; 
   pm {{player.steamId}} "These high-level players are also online:
@@ -49,7 +50,6 @@ const Output = view(() => {
     result = parseTemplate(Store.input, data)
       .split(';')
       .map(_ => (<Fragment>{_}<br /></Fragment>))
-    console.log(result);
   } catch (error) {
     result = "Invalid template, " + error
   }
@@ -83,7 +83,7 @@ const Data = view(() => {
 })
 
 const Presets = view(() => {
-  const temp = Store.dataTemplates.map((data, i) => (
+  const options = Store.dataTemplates.map((data, i) => (
     <option value={i}>{data().name}</option>
   ))
 
@@ -98,7 +98,7 @@ const Presets = view(() => {
       <H1 text="Data presets" />
 
       <select className="text-black bg-white rounded-lg p-1" onChange={select}>
-        {temp}
+        {options}
       </select>
 
     </div>
@@ -118,8 +118,3 @@ const Input = view(() => {
   )
 })
 
-const H1 = (props) => {
-  return (
-    <h1 className="font-extrabold text-xl p-2">{props.text}</h1>
-  )
-}

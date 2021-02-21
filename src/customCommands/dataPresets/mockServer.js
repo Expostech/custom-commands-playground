@@ -9,7 +9,7 @@ function mockServer() {
         name: faker.company.companyName(),
         ip: faker.internet.ip(),
         webPort: faker.random.number(),
-        onlinePlayers: [...Array(faker.random.number(10))].map(_ => mockPlayer())
+        onlinePlayers: [...Array(faker.random.number({ max: 10, min: 1 }))].map(_ => mockPlayer())
     }
 }
 
