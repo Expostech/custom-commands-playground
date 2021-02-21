@@ -5,6 +5,7 @@ import parseTemplate from '../customCommands/parseTemplate'
 import playerData from '../customCommands/dataPresets/player'
 import cronData from '../customCommands/dataPresets/cron'
 import hookData from "../customCommands/dataPresets/hook"
+import ReactJson from 'react-json-view'
 
 const Store = store({
   input: `
@@ -63,13 +64,16 @@ const Output = view(() => {
 
 const Data = view(() => {
   return (
-    <div className="text-sm overflow-auto h-96 w-96  bg-indigo-400 rounded-lg">
-      <pre>
-        <code >
-          {Store.data}
-        </code>
-      </pre>
+    <div className="text-sm overflow-auto h-96 w-full  bg-indigo-400 rounded-lg">
+      <ReactJson theme="monokai" src={Store.data} />
     </div>
+    /*     <div className="text-sm overflow-auto h-96 w-96  bg-indigo-400 rounded-lg">
+          <pre>
+            <code >
+              {}
+            </code>
+          </pre>
+        </div> */
 
 
   );
@@ -80,10 +84,10 @@ const Presets = view(() => {
     <option value={i}>{data().name}</option>
   ))
 
-  const select = (e) => (Store.data = JSON.stringify(Store.dataTemplates[e.target.value]().data, null, 4))
+  const select = (e) => (Store.data = Store.dataTemplates[e.target.value]().data)
 
   if (!Store.data) {
-    Store.data = JSON.stringify(playerData().data, null, 4)
+    Store.data = playerData().data
   }
 
   return (
