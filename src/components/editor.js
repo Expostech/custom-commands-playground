@@ -87,7 +87,7 @@ const Presets = view(() => {
   }
 
   return (
-    <select className="text-black bg-indigo-400 rounded-lg" onChange={select}>
+    <select className="text-black bg-indigo-400 rounded-lg p-1" onChange={select}>
       {temp}
     </select>
   );
@@ -95,11 +95,14 @@ const Presets = view(() => {
 
 const Input = view(() => {
   return (
-    <textarea
-      className="bg-indigo-400 h-full w-full rounded-lg p-10"
-      value={Store.input}
-      onChange={e => (Store.input = e.target.value)}
-    />
+    <div className="w-full h-full">
+      <h1 className="font-extrabold text-xl">Input</h1>
+      <textarea
+        className="bg-indigo-400 h-full w-full rounded-lg p-5"
+        value={Store.input}
+        onChange={e => (Store.input = e.target.value)}
+      />
+    </div>
   )
 })
 
