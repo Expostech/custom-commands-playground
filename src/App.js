@@ -1,7 +1,7 @@
 import Editor from './components/editor'
 function App() {
   return (
-    <div className="App-header">
+    <div>
       <Editor></Editor>
     </div>
   );
