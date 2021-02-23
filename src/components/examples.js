@@ -14,7 +14,7 @@ const Examples = () => {
     }
 
     const rendered = examples.map(_ => (
-        <li className="cursor-pointer" onClick={handleClick}>{_.name}</li>
+        <li className="cursor-pointer underline" onClick={handleClick}>{_.name}</li>
     ))
 
     return (
