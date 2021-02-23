@@ -7,6 +7,7 @@ import { Store } from './editor'
 const Examples = () => {
 
     const handleClick = (e) => {
+        e.stopPropagation();
         const ex = examples.find(_ => _.name === e.target.textContent)
         Store.data = ex.dataSet().data
         Store.input = ex.input
