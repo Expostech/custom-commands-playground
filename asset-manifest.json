@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/custom-commands-playground/static/css/main.d76cf3e1.chunk.css",
-    "main.js": "/custom-commands-playground/static/js/main.533e20fc.chunk.js",
-    "main.js.map": "/custom-commands-playground/static/js/main.533e20fc.chunk.js.map",
+    "main.js": "/custom-commands-playground/static/js/main.7ca9cde1.chunk.js",
+    "main.js.map": "/custom-commands-playground/static/js/main.7ca9cde1.chunk.js.map",
     "runtime-main.js": "/custom-commands-playground/static/js/runtime-main.ad4643a3.js",
     "runtime-main.js.map": "/custom-commands-playground/static/js/runtime-main.ad4643a3.js.map",
-    "static/js/2.b007f95d.chunk.js": "/custom-commands-playground/static/js/2.b007f95d.chunk.js",
-    "static/js/2.b007f95d.chunk.js.map": "/custom-commands-playground/static/js/2.b007f95d.chunk.js.map",
+    "static/js/2.f21d1706.chunk.js": "/custom-commands-playground/static/js/2.f21d1706.chunk.js",
+    "static/js/2.f21d1706.chunk.js.map": "/custom-commands-playground/static/js/2.f21d1706.chunk.js.map",
     "static/js/3.305ffaba.chunk.js": "/custom-commands-playground/static/js/3.305ffaba.chunk.js",
     "static/js/3.305ffaba.chunk.js.map": "/custom-commands-playground/static/js/3.305ffaba.chunk.js.map",
     "index.html": "/custom-commands-playground/index.html",
     "static/css/main.d76cf3e1.chunk.css.map": "/custom-commands-playground/static/css/main.d76cf3e1.chunk.css.map",
-    "static/js/2.b007f95d.chunk.js.LICENSE.txt": "/custom-commands-playground/static/js/2.b007f95d.chunk.js.LICENSE.txt"
+    "static/js/2.f21d1706.chunk.js.LICENSE.txt": "/custom-commands-playground/static/js/2.f21d1706.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.ad4643a3.js",
-    "static/js/2.b007f95d.chunk.js",
+    "static/js/2.f21d1706.chunk.js",
     "static/css/main.d76cf3e1.chunk.css",
-    "static/js/main.533e20fc.chunk.js"
+    "static/js/main.7ca9cde1.chunk.js"
   ]
 }
