@@ -13,7 +13,7 @@ export const Store = store({
   pm {{player.steamId}} "Hey {{player.name}} hows it going?"; 
   pm {{player.steamId}} "These high-level players are also online:
     {{#each server.onlinePlayers}}
-      {{#if (gt this.level 10000)}}
+      {{#if (gt this.level 100)}}
         {{this.name}}
       {{/if}}
     {{/each}}"

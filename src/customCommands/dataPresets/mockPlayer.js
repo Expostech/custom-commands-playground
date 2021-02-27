@@ -1,6 +1,16 @@
-import faker from 'faker'
+import faker from 'faker';
+
+const roleFields = ['manageServer', 'manageEconomy', 'managePlayers', 'manageTickets', 'viewAnalytics', 'viewDashboard', 'useTracking', 'useChat', 'useCommands', 'manageGbl', 'discordExec', 'discordLookup']
 
 function mockPlayer() {
+
+    const roleFieldsWithPerm = {};
+
+    for (const field of roleFields) {
+        roleFieldsWithPerm[field] = faker.random.boolean();
+    }
+
+
     return {
         "createdAt": 1552652314408,
         "updatedAt": 1552753112921,
@@ -27,7 +37,12 @@ function mockPlayer() {
         "lastTeleportTime": faker.date.past(),
         "server": 1,
         "user": 1,
-        "role": 1
+        "role": {
+            name: faker.name.jobTitle(),
+            level: faker.random.number({ max: 2000, min: 0 }),
+            amountOfTeleports: faker.random.number({ max: 50, min: 0 }),
+            ...roleFieldsWithPerm
+        }
     }
 }
 
