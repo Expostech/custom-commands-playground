@@ -6,7 +6,7 @@ export default function Sidenav() {
 
     return (
         <div className={`w-1/4 max-h-screen`}  >
-            <div className={`container overflow-auto bg-green-600 py-10 px-5 h-full max-h-screen`}>
+            <div className={`container overflow-auto bg-gray-400 py-10 px-5 h-full max-h-screen`}>
                 <article>
                     <p>
                         This is a playground for a new syntax of CSMM custom commands,

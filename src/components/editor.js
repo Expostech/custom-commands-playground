@@ -10,7 +10,7 @@ import H1 from './H1'
 
 export const Store = store({
   input: `
-  pm {{player.steamId}} "Hey {{player.name}} hows it going?"; 
+  pm {{player.steamId}} "Hey {{player.name}} hows it going?";
   pm {{player.steamId}} "These high-level players are also online:
     {{#each server.onlinePlayers}}
       {{#if (gt this.level 100)}}
