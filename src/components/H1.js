@@ -1,6 +1,6 @@
 const H1 = (props) => {
     return (
-        <h1 className="font-extrabold text-xl p-2">{props.text}</h1>
+        <h1 className="font-extrabold text-xl pb-3 text-primary">{props.text}</h1>
     )
 }
 

@@ -1,7 +1,6 @@
-import playerData from '../customCommands/dataPresets/player'
-import cronData from '../customCommands/dataPresets/cron'
-import hookData from "../customCommands/dataPresets/hook"
-import { Store } from './editor'
+import playerData from '../customCommands/dataPresets/player';
+import hookData from "../customCommands/dataPresets/hook";
+import { Store } from './editor/store';
 
 
 const Examples = () => {

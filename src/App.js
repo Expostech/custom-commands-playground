@@ -1,4 +1,4 @@
-import Editor from './components/editor'
+import Editor from './components/editor/editor'
 import Sidenav from './components/sidenav';
 function App() {
   return (

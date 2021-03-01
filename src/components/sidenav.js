@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React from 'react';
 import Examples from "./examples";
 import H1 from "./H1";
 
@@ -6,11 +6,12 @@ export default function Sidenav() {
 
     return (
         <div className={`w-1/4 max-h-screen`}  >
-            <div className={`container overflow-auto bg-gray-400 py-10 px-5 h-full max-h-screen`}>
+            <div className={`container overflow-auto bg-background py-10 px-5 h-full max-h-screen`}>
                 <article>
+                    <H1>Custom commands playground</H1>
                     <p>
                         This is a playground for a new syntax of CSMM custom commands,
-                it uses <a className="text-green-200" target="_blank" href="https://handlebarsjs.com/guide/#what-is-handlebars">Handlebars templating</a> which
+                it uses <a className="text-primary font-semibold" target="_blank" href="https://handlebarsjs.com/guide/#what-is-handlebars">Handlebars templating</a> which
                 allows more advanced features, like loops and conditional statements.
                 </p>
                     <Divider />
