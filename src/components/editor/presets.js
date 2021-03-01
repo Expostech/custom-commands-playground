@@ -1,7 +1,7 @@
 
 import { view } from '@risingstack/react-easy-state';
 import { Store } from './store';
-import H1 from '../H1';
+import { H1 } from '../h1';
 import playerData from '../../customCommands/dataPresets/player';
 
 export const Presets = view(() => {

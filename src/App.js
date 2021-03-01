@@ -1,12 +1,12 @@
-import Editor from './components/editor/editor'
-import Sidenav from './components/sidenav';
-function App() {
+import { Editor } from './components/editor/editor'
+import { Sidenav } from './components/sidenav';
+
+export const App = () => {
   return (
     <div className="flex flex-row overflow-hidden h-screen">
-      <Sidenav></Sidenav>
-      <Editor></Editor>
+      <Sidenav />
+      <Editor />
     </div>
   );
 }
 
-export default App;

@@ -1,9 +1,9 @@
 import React from 'react';
-import Examples from "./examples";
-import H1 from "./H1";
+import { Examples } from "./examples";
+import { H1 } from "./h1";
 import { Divider } from './divider';
 
-export default function Sidenav() {
+export const Sidenav = () => {
     return (
         <div className={`w-1/4 max-h-screen`}  >
             <div className={`container overflow-auto bg-background py-10 px-5 h-full max-h-screen`}>

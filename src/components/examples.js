@@ -3,7 +3,7 @@ import hookData from "../customCommands/dataPresets/hook";
 import { Store } from './editor/store';
 
 
-const Examples = () => {
+export const Examples = () => {
 
     const handleClick = (e) => {
         e.stopPropagation();
@@ -22,8 +22,6 @@ const Examples = () => {
         </ul>
     )
 }
-
-export default Examples
 
 
 const examples = [{

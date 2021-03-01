@@ -1,5 +1,5 @@
 import { view } from '@risingstack/react-easy-state';
-import H1 from '../H1';
+import { H1 } from '../h1';
 import { Store } from './store';
 
 export const Input = view(() => {

@@ -4,8 +4,7 @@ import { Data } from './data';
 import { Output } from './output';
 import { Input } from './input';
 
-
-export default function Editor() {
+export const Editor = () => {
   return (
     <div className="container">
       <div className="container flex flex-row">

@@ -2,7 +2,7 @@ import React from 'react';
 import { view } from '@risingstack/react-easy-state';
 import parseTemplate from '../../customCommands/parseTemplate'
 import { Store } from './store';
-import H1 from '../H1'
+import { H1 } from '../h1'
 
 export const Output = view(() => {
   let data
