@@ -1,11 +1,11 @@
 import { view } from '@risingstack/react-easy-state';
-import { H1 } from '../h1';
+import { H1 } from '../text';
 import { Store } from './store';
 
 export const Input = view(() => {
   return (
     <div className="w-full h-full bg-background p-4">
-      <H1 text="Input" />
+      <H1>Input</H1>
       <textarea
         className="bg-background h-96 w-full rounded-lg"
         value={Store.input}

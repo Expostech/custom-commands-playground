@@ -1,7 +1,7 @@
 
 import { view } from '@risingstack/react-easy-state';
 import { Store } from './store';
-import { H1 } from '../h1';
+import { H1 } from '../text';
 import playerData from '../../customCommands/dataPresets/player';
 
 export const Presets = view(() => {
@@ -17,12 +17,8 @@ export const Presets = view(() => {
 
   return (
     <div className="flex flex-row">
-      <H1 text="Data presets" />
-
-      <select className="text-black bg-white rounded-lg p-1" onChange={select}>
-        {options}
-      </select>
-
+      <H1>Text presets</H1>
+      <select className="text-black bg-white rounded-lg p-1" onChange={select}>{options}</select>
     </div>
   );
 })

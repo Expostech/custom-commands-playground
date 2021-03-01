@@ -2,7 +2,7 @@ import React from 'react';
 import { view } from '@risingstack/react-easy-state';
 import parseTemplate from '../../customCommands/parseTemplate'
 import { Store } from './store';
-import { H1 } from '../h1'
+import { H1 } from '../text'
 
 export const Output = view(() => {
   let data
@@ -24,7 +24,7 @@ export const Output = view(() => {
 
   return (
     <div className="bg-background h-96 rounded-lg p-3">
-      <H1 text="Output" />
+      <H1>output</H1>
       <p>
         {result}
 
