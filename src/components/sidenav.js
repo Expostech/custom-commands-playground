@@ -1,6 +1,7 @@
-import { useState } from "react";
-import Examples from "./examples";
-import H1 from "./H1";
+import { useState } from 'react';
+
+import Examples from './examples';
+import H1 from './H1';
 
 export default function Sidenav() {
 
@@ -29,6 +30,13 @@ export default function Sidenav() {
                         <li>gte (greater than or equal)</li>
                         <li>lt (less than)</li>
                         <li>lte (less than or equal)</li>
+                        <li>or</li>
+                        <li>and</li>
+                        <li>not</li>
+                        <li>sum</li>
+                        <li>subtract</li>
+                        <li>multiply</li>
+                        <li>divide</li>
                     </ul>
                     <p>
                         You can use these helpers in conditional statements like:
@@ -38,6 +46,11 @@ export default function Sidenav() {
                         {`{{#if (gt player.level 100)}}"}
 say \"Your command here\"
 {{/if}}`}
+                    </code>
+                    <p>Or like this:</p>
+                    <code className="block whitespace-pre-wrap py-3">
+                        {/* :D */}
+                        {`say "1 + 1 = {{sum 1 1}}"`}
                     </code>
 
                     <Divider />
