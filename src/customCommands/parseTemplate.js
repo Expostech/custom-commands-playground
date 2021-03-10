@@ -58,6 +58,10 @@ Handlebars.registerHelper('round', function (original, decimals = 1) {
     return original.toFixed(decimals);
 });
 
+Handlebars.registerHelper('sort', function (array, propertyPath) {
+    return array.sort((a, b) => a[propertyPath] - b[propertyPath]);
+});
+
 export default function parseTemplate(template, data) {
     const compiled = Handlebars.compile(template)
     return compiled(data)
