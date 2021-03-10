@@ -58,8 +58,17 @@ Handlebars.registerHelper('round', function (original, decimals = 1) {
     return original.toFixed(decimals);
 });
 
-Handlebars.registerHelper('sort', function (array, propertyPath) {
-    return array.sort((a, b) => a[propertyPath] - b[propertyPath]);
+Handlebars.registerHelper('sort', function (array, propertyPath, order) {
+    order = order.toLowerCase();
+
+    switch (order) {
+        case 'asc':
+            return array.sort((a, b) => a[propertyPath] - b[propertyPath]);
+        case 'desc':
+            return array.sort((a, b) => b[propertyPath] - a[propertyPath]);
+        default:
+            throw new Error('Order must be either asc or desc');
+    }
 });
 
 export default function parseTemplate(template, data) {
