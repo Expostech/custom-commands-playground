@@ -47,6 +47,10 @@ Handlebars.registerHelper('divide', function (a, b) {
     return a / b;
 });
 
+Handlebars.registerHelper('mod', function (a, b) {
+    return a % b;
+});
+
 export default function parseTemplate(template, data) {
     const compiled = Handlebars.compile(template)
     return compiled(data)
