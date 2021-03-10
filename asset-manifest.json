@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/custom-commands-playground/static/css/main.d76cf3e1.chunk.css",
-    "main.js": "/custom-commands-playground/static/js/main.f1627d14.chunk.js",
-    "main.js.map": "/custom-commands-playground/static/js/main.f1627d14.chunk.js.map",
+    "main.js": "/custom-commands-playground/static/js/main.5ff11304.chunk.js",
+    "main.js.map": "/custom-commands-playground/static/js/main.5ff11304.chunk.js.map",
     "runtime-main.js": "/custom-commands-playground/static/js/runtime-main.a613cea2.js",
     "runtime-main.js.map": "/custom-commands-playground/static/js/runtime-main.a613cea2.js.map",
     "static/js/2.26010c0f.chunk.js": "/custom-commands-playground/static/js/2.26010c0f.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.a613cea2.js",
     "static/js/2.26010c0f.chunk.js",
     "static/css/main.d76cf3e1.chunk.css",
-    "static/js/main.f1627d14.chunk.js"
+    "static/js/main.5ff11304.chunk.js"
   ]
 }
