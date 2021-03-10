@@ -77,5 +77,22 @@ const examples = [
     `,
         dataSet: playerData
     },
+    {
+        name: 'Scoreboard of top players',
+        description: 'Shows a top 5 of online players sorted by their zombie kills',
+        input: `
+        say "Top 5 players online by Kills:";
+        {{!-- Sort the array of online players --}}
+        {{#each (sort server.onlinePlayers "zombieKills" "desc")}}
+        {{!-- @index is how many iterations we have done, so for a top 5 we only print when @index is smaller than 5 --}}
+            {{#if (lt @index 5)}}
+                say "{{this.name}} {{this.zombieKills}} Kills, {{this.deaths}} Deaths";
+                say "KLR = {{round ( divide this.zombieKills (sum this.deaths 1)) 1}}";
+            {{/if}}
+        {{/each}}
+    `,
+        dataSet: playerData
+    },
 ]
+
 
