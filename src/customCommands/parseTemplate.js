@@ -51,6 +51,13 @@ Handlebars.registerHelper('mod', function (a, b) {
     return a % b;
 });
 
+Handlebars.registerHelper('round', function (original, decimals = 1) {
+    if (decimals < 0) {
+        decimals = 1;
+    }
+    return original.toFixed(decimals);
+});
+
 export default function parseTemplate(template, data) {
     const compiled = Handlebars.compile(template)
     return compiled(data)
