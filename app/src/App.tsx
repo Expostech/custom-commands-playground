@@ -1,5 +1,10 @@
-export const App = () => {
+import { FC, StrictMode } from 'react';
+import { Router } from './router';
+
+export const App: FC = () => {
   return (
-    <div>app here</div>
+    <StrictMode>
+      <Router />
+    </StrictMode>
   );
 };
