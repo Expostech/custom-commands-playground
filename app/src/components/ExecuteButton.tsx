@@ -4,6 +4,7 @@ import { Play, Stop } from '../icons';
 
 const Container = styled.button<{ active: boolean; isLoading: boolean }>`
   position: absolute;
+  top: 50px;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -18,6 +19,7 @@ const Container = styled.button<{ active: boolean; isLoading: boolean }>`
   background-color: ${({ theme }) => theme.bg};
   padding: 10px;
   z-index: 10;
+  cursor: pointer;
 `;
 
 interface IProps {
@@ -33,7 +35,7 @@ export const ExecuteButton: FC<IProps> = ({ active = false, onClick, isLoading =
       isLoading={isLoading}
       onClick={(e: ReactMouseEvent<HTMLButtonElement, MouseEvent>): void => (typeof onClick === 'function' ? onClick(e) : null)}
     >
-      {isLoading ? <Stop /> : <Play />}
+      {isLoading ? <Stop pointer /> : <Play pointer />}
     </Container >
   );
 };
