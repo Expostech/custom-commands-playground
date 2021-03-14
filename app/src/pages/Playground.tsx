@@ -1,8 +1,13 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import { Editor, Output, ExecuteButton } from '../components';
+import { Editor, Output, ExecuteButton, NavBar, Header } from '../components';
 
-const Container = styled.div`
+const Wrapper = styled.div`
+  max-height: 100vh;
+  overflow-y: hidden;
+`;
+
+const EditorContainer = styled.div`
   position: relative;
   width: 100%;
   height: 80vh;
@@ -13,10 +18,15 @@ const Container = styled.div`
 
 export const Playground: FC = () => {
   return (
-    <Container>
-      <ExecuteButton />
-      <Editor />
-      <Output />
-    </Container>
+    <Wrapper>
+      <Header />
+      <EditorContainer>
+        <NavBar />
+        {/* EDITOR HERE*/}
+        <ExecuteButton />
+        <Editor />
+        <Output />
+      </EditorContainer>
+    </Wrapper>
   );
 };

@@ -1,8 +1,7 @@
 import { FC, StrictMode } from 'react';
 import { Router } from './router';
 import { ThemeProvider } from 'styled-components';
-import { GlobalStyle } from './constants/globalstyle';
-import { DEFAULT } from './constants/theme';
+import { GlobalStyle, DEFAULT } from './styled';
 
 export const App: FC = () => {
   return (
