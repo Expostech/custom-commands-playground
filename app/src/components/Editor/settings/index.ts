@@ -1,5 +1,6 @@
 import * as monaco from 'monaco-editor';
-import { CUSTOM_LANGUAGE } from '../constants';
+
+import { CUSTOM_LANGUAGE, SNIPPETS } from '../constants';
 import customCommands from '../constants/commands.json';
 
 export function setup() {
@@ -15,7 +16,8 @@ export function setup() {
         startColumn: model.getWordUntilPosition(position).startColumn,
         endColumn: model.getWordUntilPosition(position).endColumn
       };
-      const suggestions: monaco.languages.CompletionItem[] = customCommands.map((cmd) => ({
+
+      const commandCompletions: monaco.languages.CompletionItem[] = customCommands.map((cmd) => ({
         label: cmd.command,
         kind: monaco.languages.CompletionItemKind.Method,
         documentation: cmd.help,
@@ -23,6 +25,16 @@ export function setup() {
         insertText: cmd.command,
         range: range,
       }));
+
+      const snippets: monaco.languages.CompletionItem[] = SNIPPETS.map(snippet => ({
+        label: snippet.label,
+        kind: monaco.languages.CompletionItemKind.Snippet,
+        insertText: snippet.insertText,
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        range: range,
+      }));
+
+      const suggestions: monaco.languages.CompletionItem[] = snippets.concat(commandCompletions);
       return { suggestions: suggestions };
     }
   });
