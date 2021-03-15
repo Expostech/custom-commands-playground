@@ -17,13 +17,17 @@ const EditorContainer = styled.div`
 `;
 
 export const Playground: FC = () => {
+  function executeCommand() {
+
+  }
+
   return (
     <Wrapper>
       <Header />
       <EditorContainer>
         <NavBar />
         {/* EDITOR HERE*/}
-        <ExecuteButton />
+        <ExecuteButton onClick={executeCommand} />
         <Editor />
         <Output />
       </EditorContainer>

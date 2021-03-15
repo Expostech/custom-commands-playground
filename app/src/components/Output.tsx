@@ -15,7 +15,7 @@ export const Output: FC = () => {
   const options: monaco.editor.IStandaloneEditorConstructionOptions = {
     value: ['val here'].join('\n'),
     language: 'typescript',
-    theme: 'vs-dark'
+    readOnly: true
   };
 
   useEffect(() => {

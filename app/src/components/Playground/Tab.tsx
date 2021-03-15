@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Session } from './TabBar';
 
 export interface TabProps {
-  session: Session
+  session: Session;
 }
 
 export const Tab: FC<TabProps> = () => {
