@@ -1,1 +1,1 @@
-export const CUSTOM_LANGUAGE = 'CSMM';
+export const CUSTOM_LANGUAGE = 'handlebars';
