@@ -1,32 +1,43 @@
-import { FC, useRef, useEffect } from 'react';
 import * as monaco from 'monaco-editor';
+import { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div`
+import { editorOptions, setup } from './Editor/settings';
+
+const EditorContainer = styled.div`
+  height: 100vh;
   width: 100%;
-  height: 800vh;
-  background-color: orange;
 `;
 
-export const Output: FC = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  let editor: monaco.editor.IStandaloneCodeEditor;
+interface IProps {
+  output: string;
+}
 
-  const options: monaco.editor.IStandaloneEditorConstructionOptions = {
-    value: ['val here'].join('\n'),
-    language: 'typescript',
-    readOnly: true
-  };
+export const Output: FC<IProps> = ({ output = '' }) => {
+  const [editor,setEditor] = useState<monaco.editor.IStandaloneCodeEditor>();
+  const ref = useRef<HTMLDivElement>(null);
+
+  function saveEditor(editor: monaco.editor.IStandaloneCodeEditor) {
+    setEditor(editor);
+  }
 
   useEffect(() => {
     if (ref.current) {
-      editor = monaco.editor.create(ref.current, options);
+      saveEditor(monaco.editor.create(ref.current, editorOptions('')));
+      setup(); // setup editor default settings (language)
     }
+
     return () => {
-      editor.dispose();
+      editor?.dispose();
     };
   }, []);
-  return (
-    <Container ref={ref} />
-  );
+
+  useEffect(() => {
+    if (editor) {
+      editor.getModel()?.setValue(output);
+    }
+  }, [output]);
+
+  return <EditorContainer ref={ref} />
+  ;
 };

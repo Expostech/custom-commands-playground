@@ -1,8 +1,9 @@
 import { FC, StrictMode } from 'react';
-import { Router } from './router';
-import { Provider } from 'react-redux'; // TODO:
+import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { GlobalStyle, DEFAULT } from './styled';
+
+import { Router } from './router';
+import { DEFAULT, GlobalStyle } from './styled';
 
 export const App: FC = () => {
   return (

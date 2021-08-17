@@ -9,39 +9,60 @@ export function setup() {
 
   // SUGGESTIONS OF POSSIBLE COMMANDS
   monaco.languages.registerCompletionItemProvider(CUSTOM_LANGUAGE, {
-    provideCompletionItems: (model: monaco.editor.ITextModel, position: monaco.Position, context: monaco.languages.CompletionContext, token: monaco.CancellationToken) => {
+    provideCompletionItems: (
+      model: monaco.editor.ITextModel,
+      position: monaco.Position,
+      context: monaco.languages.CompletionContext,
+      token: monaco.CancellationToken
+    ) => {
       const range: monaco.IRange = {
         startLineNumber: position.lineNumber,
         endLineNumber: position.lineNumber,
         startColumn: model.getWordUntilPosition(position).startColumn,
-        endColumn: model.getWordUntilPosition(position).endColumn
+        endColumn: model.getWordUntilPosition(position).endColumn,
       };
 
-      const commandCompletions: monaco.languages.CompletionItem[] = customCommands.map((cmd) => ({
-        label: cmd.command,
-        kind: monaco.languages.CompletionItemKind.Method,
-        documentation: cmd.help,
-        detail: cmd.description,
-        insertText: cmd.command,
-        range: range,
-      }));
+      const commandCompletions: monaco.languages.CompletionItem[] =
+        customCommands.map((cmd) => ({
+          label: cmd.command,
+          kind: monaco.languages.CompletionItemKind.Method,
+          documentation: cmd.help,
+          detail: cmd.description,
+          insertText: cmd.command,
+          range: range,
+        }));
 
-      const snippets: monaco.languages.CompletionItem[] = SNIPPETS.map(snippet => ({
-        label: snippet.label,
-        kind: monaco.languages.CompletionItemKind.Snippet,
-        insertText: snippet.insertText,
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-        range: range,
-      }));
+      const snippets: monaco.languages.CompletionItem[] = SNIPPETS.map(
+        (snippet) => ({
+          label: snippet.label,
+          kind: monaco.languages.CompletionItemKind.Snippet,
+          insertText: snippet.insertText,
+          insertTextRules:
+            monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+          range: range,
+        })
+      );
 
-      const suggestions: monaco.languages.CompletionItem[] = snippets.concat(commandCompletions);
+      const suggestions: monaco.languages.CompletionItem[] =
+        snippets.concat(commandCompletions);
       return { suggestions: suggestions };
-    }
+    },
   });
 }
 
-export const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
-  value: ['val here'].join('\n'),
-  language: CUSTOM_LANGUAGE,
-  theme: 'vs-dark'
+const initialValue = `{{#if (gt player.role.level 10 )}} 
+pm {{player.steamId}} "Hey {{player.name}} You have the correct role to execute this command";
+{{else}} 
+pm {{player.steamId}} "Sorry, {{player.name}}, you're not allowed to do that";
+{{/if}}
+`;
+
+export const editorOptions = (init = initialValue) => {
+  return {
+    value: init,
+    language: CUSTOM_LANGUAGE,
+    theme: 'vs-dark',
+    padding: { top: 10 },
+    automaticLayout: true
+  };
 };
