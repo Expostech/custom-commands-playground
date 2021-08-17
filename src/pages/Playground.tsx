@@ -37,7 +37,8 @@ export const Playground: FC = () => {
       const r = await axios.post(url, { template: editor?.getModel()?.getValue() });
       setOutput(r.data.output);
     } catch (error) {
-      console.log(error);
+      // eslint-disable-next-line no-console
+      console.error(error);
     }
   }
 
