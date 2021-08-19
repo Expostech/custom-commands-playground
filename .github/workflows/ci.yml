@@ -28,6 +28,8 @@ jobs:
         id: branch
         run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
 
+      - run: echo ${{ steps.branch.short_ref }}
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
