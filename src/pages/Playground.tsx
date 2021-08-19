@@ -37,9 +37,19 @@ const RightContainer = styled.div`
   justify-content: center;
 `;
 
+const formatOutput = (output: string[], errors: string[]) => {
+  const joinedOutput = output.join('\n');
+
+  if (errors.length) {
+    return `${joinedOutput}\n\n\n------------------\n\n\nERRORS\n\n\n${errors.join('\n')}`;
+  }
+
+  return joinedOutput;
+};
+
 export const Playground: FC = () => {
   const [editor,setEditor] = useState<monaco.editor.IStandaloneCodeEditor>();
-  const [output,setOutput] = useState([]);
+  const [output,setOutput] = useState('');
   const [data, setData] = useState({ data: {} });
 
   const url = process.env.REACT_APP_CSMM_URL ? `${process.env.REACT_APP_CSMM_URL}/api/playground/execute` : '/api/playground/execute';
@@ -49,7 +59,8 @@ export const Playground: FC = () => {
   async function executeCommand() {
     try {
       const r = await axios.post(url, { template: editor?.getModel()?.getValue(), data: data.data });
-      setOutput(r.data.output);
+      const formatted = formatOutput(r.data.output, r.data.errors);
+      setOutput(formatted);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
