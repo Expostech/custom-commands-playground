@@ -24,9 +24,12 @@ jobs:
         with:
           args: zip -qq -r build.zip build
 
+      - name: Set branch name var
+        id: branch
+        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: build.zip
-          tag_name: ${{ env.GITHUB_REF}}
+          tag_name: ${{ steps.branch.short_ref }}
