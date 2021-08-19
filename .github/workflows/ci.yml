@@ -47,4 +47,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: build.zip
-          tag_name: ${{ steps.prep.outputs.version }}
+          tag_name: ${{ steps.prep.outputs.version }}-${{ steps.prep.outputs.created }}
