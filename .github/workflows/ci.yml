@@ -29,4 +29,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: build.zip
-          tag_name: ${GITHUB_REF##*/}
+          tag_name: ${{ env.GITHUB_REF}}
