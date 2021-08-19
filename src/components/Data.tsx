@@ -1,19 +1,21 @@
 import * as monaco from 'monaco-editor';
-import { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
+import { getData } from '../services/data';
 import { editorOptions, setup } from './Editor/settings';
 
 const EditorContainer = styled.div`
-  height: 100%;
+  height: 100vh;
   width: 100%;
 `;
 
 interface IProps {
-  output: string[];
+  data: any;
+  setData: any;
 }
 
-export const Output: FC<IProps> = ({ output = [] }) => {
+export const Data: FC<IProps> = ({ data, setData }) => {
   const [editor,setEditor] = useState<monaco.editor.IStandaloneCodeEditor>();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -22,8 +24,12 @@ export const Output: FC<IProps> = ({ output = [] }) => {
   }
 
   useEffect(() => {
+    setData(getData());
+  }, []);
+
+  useEffect(() => {
     if (ref.current) {
-      saveEditor(monaco.editor.create(ref.current, editorOptions('', { readOnly: true })));
+      saveEditor(monaco.editor.create(ref.current, editorOptions('', { readOnly: true, language: 'json' })));
       setup(); // setup editor default settings (language)
     }
 
@@ -34,9 +40,9 @@ export const Output: FC<IProps> = ({ output = [] }) => {
 
   useEffect(() => {
     if (editor) {
-      editor.getModel()?.setValue(output.join('\n'));
+      editor.getModel()?.setValue(JSON.stringify(data, null, 4));
     }
-  }, [output]);
+  }, [data]);
 
   return <EditorContainer ref={ref} />
   ;

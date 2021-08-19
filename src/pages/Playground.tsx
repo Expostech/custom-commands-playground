@@ -4,6 +4,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import { ExecuteButton, Header, NavBar, Output } from '../components';
+import { Data } from '../components/Data';
 import { editorOptions, setup } from '../components/Editor/settings';
 
 const Wrapper = styled.div`
@@ -25,16 +26,29 @@ const EditorContainer = styled.div`
   width: 100%;
 `;
 
+const RightContainer = styled.div`
+  position: relative;
+  width: 100%;
+  padding-right: 200px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+`;
+
 export const Playground: FC = () => {
   const [editor,setEditor] = useState<monaco.editor.IStandaloneCodeEditor>();
   const [output,setOutput] = useState([]);
+  const [data, setData] = useState({ data: {} });
+
   const url = process.env.REACT_APP_CSMM_URL ? `${process.env.REACT_APP_CSMM_URL}/api/playground/execute` : '/api/playground/execute';
 
   const ref = useRef<HTMLDivElement>(null);
 
   async function executeCommand() {
     try {
-      const r = await axios.post(url, { template: editor?.getModel()?.getValue() });
+      const r = await axios.post(url, { template: editor?.getModel()?.getValue(), data: data.data });
       setOutput(r.data.output);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -63,7 +77,10 @@ export const Playground: FC = () => {
         <NavBar />
         <ExecuteButton onClick={() => executeCommand()} />
         <EditorContainer ref={ref} />
-        <Output output={output}/>
+        <RightContainer>
+          <Output output={output}/>
+          <Data data={data} setData={setData} />
+        </RightContainer>
       </PlaygroundContainer>
     </Wrapper>
   );

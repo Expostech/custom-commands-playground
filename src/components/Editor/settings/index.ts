@@ -57,12 +57,13 @@ pm {{player.steamId}} "Sorry, {{player.name}}, you're not allowed to do that";
 {{/if}}
 `;
 
-export const editorOptions = (init = initialValue) => {
+export const editorOptions = (init = initialValue, extraOptions = {}) => {
   return {
     value: init,
     language: CUSTOM_LANGUAGE,
     theme: 'vs-dark',
     padding: { top: 10 },
-    automaticLayout: true
+    automaticLayout: true,
+    ...extraOptions,
   };
 };
