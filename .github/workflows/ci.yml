@@ -20,9 +20,12 @@ jobs:
           npm ci
           npm run build
 
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.0.0
-        if: github.ref == 'refs/heads/master'
+      - uses: montudor/action-zip@v1
         with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: build # The folder the action should deploy.
+          args: zip -qq -r build.zip build
+
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build.zip
