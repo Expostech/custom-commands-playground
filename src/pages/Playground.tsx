@@ -27,7 +27,7 @@ const EditorContainer = styled.div`
 
 export const Playground: FC = () => {
   const [editor,setEditor] = useState<monaco.editor.IStandaloneCodeEditor>();
-  const [output,setOutput] = useState('');
+  const [output,setOutput] = useState([]);
   const url = process.env.REACT_APP_CSMM_URL ? `${process.env.REACT_APP_CSMM_URL}/api/playground/execute` : '/api/playground/execute';
 
   const ref = useRef<HTMLDivElement>(null);

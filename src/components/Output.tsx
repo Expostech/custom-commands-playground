@@ -10,10 +10,10 @@ const EditorContainer = styled.div`
 `;
 
 interface IProps {
-  output: string;
+  output: string[];
 }
 
-export const Output: FC<IProps> = ({ output = '' }) => {
+export const Output: FC<IProps> = ({ output = [] }) => {
   const [editor,setEditor] = useState<monaco.editor.IStandaloneCodeEditor>();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -34,7 +34,7 @@ export const Output: FC<IProps> = ({ output = '' }) => {
 
   useEffect(() => {
     if (editor) {
-      editor.getModel()?.setValue(output);
+      editor.getModel()?.setValue(output.join('\n'));
     }
   }, [output]);
 
