@@ -1,33 +1,11 @@
 {
   "helpers": [
     {
-      "name": "blockHelperMissing",
-      "parameters": [
-        "context",
-        "options"
-      ]
-    },
-    {
-      "name": "each",
-      "parameters": [
-        "context",
-        "options"
-      ]
-    },
-    {
-      "name": "helperMissing",
-      "parameters": []
-    },
-    {
       "name": "unless",
       "parameters": [
         "conditional",
         "options"
       ]
-    },
-    {
-      "name": "log",
-      "parameters": []
     },
     {
       "name": "lookup",
