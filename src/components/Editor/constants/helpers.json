@@ -1,0 +1,943 @@
+{
+  "helpers": [
+    {
+      "name": "blockHelperMissing",
+      "parameters": [
+        "context",
+        "options"
+      ]
+    },
+    {
+      "name": "each",
+      "parameters": [
+        "context",
+        "options"
+      ]
+    },
+    {
+      "name": "helperMissing",
+      "parameters": []
+    },
+    {
+      "name": "unless",
+      "parameters": [
+        "conditional",
+        "options"
+      ]
+    },
+    {
+      "name": "log",
+      "parameters": []
+    },
+    {
+      "name": "lookup",
+      "parameters": [
+        "obj",
+        "field",
+        "options"
+      ]
+    },
+    {
+      "name": "with",
+      "parameters": [
+        "context",
+        "options"
+      ]
+    },
+    {
+      "name": "after",
+      "parameters": [
+        "array",
+        "n"
+      ]
+    },
+    {
+      "name": "arrayify",
+      "parameters": [
+        "value"
+      ]
+    },
+    {
+      "name": "before",
+      "parameters": [
+        "array",
+        "n"
+      ]
+    },
+    {
+      "name": "eachIndex",
+      "parameters": [
+        "array",
+        "options"
+      ]
+    },
+    {
+      "name": "filter",
+      "parameters": [
+        "array",
+        "value",
+        "options"
+      ]
+    },
+    {
+      "name": "first",
+      "parameters": [
+        "array",
+        "n"
+      ]
+    },
+    {
+      "name": "forEach",
+      "parameters": [
+        "array",
+        "options"
+      ]
+    },
+    {
+      "name": "inArray",
+      "parameters": [
+        "array",
+        "value",
+        "options"
+      ]
+    },
+    {
+      "name": "isArray",
+      "parameters": [
+        "value"
+      ]
+    },
+    {
+      "name": "itemAt",
+      "parameters": [
+        "array",
+        "idx"
+      ]
+    },
+    {
+      "name": "join",
+      "parameters": [
+        "array",
+        "separator"
+      ]
+    },
+    {
+      "name": "equalsLength",
+      "parameters": [
+        "value",
+        "length",
+        "options"
+      ]
+    },
+    {
+      "name": "last",
+      "parameters": [
+        "array",
+        "n"
+      ]
+    },
+    {
+      "name": "length",
+      "parameters": [
+        "array"
+      ]
+    },
+    {
+      "name": "lengthEqual",
+      "parameters": [
+        "value",
+        "length",
+        "options"
+      ]
+    },
+    {
+      "name": "map",
+      "parameters": [
+        "array",
+        "iter"
+      ]
+    },
+    {
+      "name": "pluck",
+      "parameters": [
+        "array",
+        "prop"
+      ]
+    },
+    {
+      "name": "reverse",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "some",
+      "parameters": [
+        "array",
+        "iter",
+        "options"
+      ]
+    },
+    {
+      "name": "sort",
+      "parameters": [
+        "array",
+        "propertyPath",
+        "order"
+      ]
+    },
+    {
+      "name": "sortBy",
+      "parameters": [
+        "array",
+        "prop",
+        "options"
+      ]
+    },
+    {
+      "name": "withAfter",
+      "parameters": [
+        "array",
+        "idx",
+        "options"
+      ]
+    },
+    {
+      "name": "withBefore",
+      "parameters": [
+        "array",
+        "idx",
+        "options"
+      ]
+    },
+    {
+      "name": "withFirst",
+      "parameters": [
+        "array",
+        "idx",
+        "options"
+      ]
+    },
+    {
+      "name": "withGroup",
+      "parameters": [
+        "array",
+        "size",
+        "options"
+      ]
+    },
+    {
+      "name": "withLast",
+      "parameters": [
+        "array",
+        "idx",
+        "options"
+      ]
+    },
+    {
+      "name": "withSort",
+      "parameters": [
+        "array",
+        "prop",
+        "options"
+      ]
+    },
+    {
+      "name": "unique",
+      "parameters": [
+        "array",
+        "options"
+      ]
+    },
+    {
+      "name": "isEmpty",
+      "parameters": [
+        "collection",
+        "options"
+      ]
+    },
+    {
+      "name": "iterate",
+      "parameters": [
+        "collection",
+        "options"
+      ]
+    },
+    {
+      "name": "and",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "compare",
+      "parameters": [
+        "a",
+        "operator",
+        "b",
+        "options"
+      ]
+    },
+    {
+      "name": "contains",
+      "parameters": [
+        "collection",
+        "value",
+        "startIndex",
+        "options"
+      ]
+    },
+    {
+      "name": "default",
+      "parameters": []
+    },
+    {
+      "name": "eq",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "gt",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "gte",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "has",
+      "parameters": [
+        "value",
+        "pattern",
+        "options"
+      ]
+    },
+    {
+      "name": "isFalsey",
+      "parameters": [
+        "val",
+        "options"
+      ]
+    },
+    {
+      "name": "isTruthy",
+      "parameters": [
+        "val",
+        "options"
+      ]
+    },
+    {
+      "name": "ifEven",
+      "parameters": [
+        "num",
+        "options"
+      ]
+    },
+    {
+      "name": "ifNth",
+      "parameters": [
+        "a",
+        "b",
+        "options"
+      ]
+    },
+    {
+      "name": "ifOdd",
+      "parameters": [
+        "val",
+        "options"
+      ]
+    },
+    {
+      "name": "is",
+      "parameters": [
+        "a",
+        "b",
+        "options"
+      ]
+    },
+    {
+      "name": "isnt",
+      "parameters": [
+        "a",
+        "b",
+        "options"
+      ]
+    },
+    {
+      "name": "lt",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "lte",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "neither",
+      "parameters": [
+        "a",
+        "b",
+        "options"
+      ]
+    },
+    {
+      "name": "not",
+      "parameters": [
+        "a"
+      ]
+    },
+    {
+      "name": "or",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "unlessEq",
+      "parameters": [
+        "a",
+        "b",
+        "options"
+      ]
+    },
+    {
+      "name": "unlessGt",
+      "parameters": [
+        "a",
+        "b",
+        "options"
+      ]
+    },
+    {
+      "name": "unlessLt",
+      "parameters": [
+        "a",
+        "b",
+        "options"
+      ]
+    },
+    {
+      "name": "unlessGteq",
+      "parameters": [
+        "a",
+        "b",
+        "options"
+      ]
+    },
+    {
+      "name": "unlessLteq",
+      "parameters": [
+        "a",
+        "b",
+        "options"
+      ]
+    },
+    {
+      "name": "year",
+      "parameters": [
+        "pattern"
+      ]
+    },
+    {
+      "name": "date",
+      "parameters": [
+        "str",
+        "pattern",
+        "options"
+      ]
+    },
+    {
+      "name": "moment",
+      "parameters": [
+        "str",
+        "pattern",
+        "options"
+      ]
+    },
+    {
+      "name": "inflect",
+      "parameters": [
+        "count",
+        "singular",
+        "plural",
+        "includeCount"
+      ]
+    },
+    {
+      "name": "ordinalize",
+      "parameters": [
+        "val"
+      ]
+    },
+    {
+      "name": "match",
+      "parameters": [
+        "files",
+        "patterns",
+        "locals",
+        "options"
+      ]
+    },
+    {
+      "name": "isMatch",
+      "parameters": [
+        "files",
+        "patterns",
+        "locals",
+        "options"
+      ]
+    },
+    {
+      "name": "mm",
+      "parameters": []
+    },
+    {
+      "name": "abs",
+      "parameters": [
+        "num"
+      ]
+    },
+    {
+      "name": "add",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "avg",
+      "parameters": []
+    },
+    {
+      "name": "ceil",
+      "parameters": [
+        "num"
+      ]
+    },
+    {
+      "name": "divide",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "floor",
+      "parameters": [
+        "num"
+      ]
+    },
+    {
+      "name": "minus",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "modulo",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "multiply",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "plus",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "random",
+      "parameters": [
+        "min",
+        "max"
+      ]
+    },
+    {
+      "name": "remainder",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "round",
+      "parameters": [
+        "original",
+        "decimals",
+        "=",
+        "1"
+      ]
+    },
+    {
+      "name": "subtract",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "sum",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "times",
+      "parameters": []
+    },
+    {
+      "name": "bytes",
+      "parameters": [
+        "number",
+        "precision",
+        "options"
+      ]
+    },
+    {
+      "name": "addCommas",
+      "parameters": [
+        "num"
+      ]
+    },
+    {
+      "name": "phoneNumber",
+      "parameters": [
+        "num"
+      ]
+    },
+    {
+      "name": "toAbbr",
+      "parameters": [
+        "number",
+        "precision"
+      ]
+    },
+    {
+      "name": "toExponential",
+      "parameters": [
+        "number",
+        "digits"
+      ]
+    },
+    {
+      "name": "toFixed",
+      "parameters": [
+        "number",
+        "digits"
+      ]
+    },
+    {
+      "name": "toFloat",
+      "parameters": [
+        "number"
+      ]
+    },
+    {
+      "name": "toInt",
+      "parameters": [
+        "number"
+      ]
+    },
+    {
+      "name": "toPrecision",
+      "parameters": [
+        "number",
+        "precision"
+      ]
+    },
+    {
+      "name": "toRegex",
+      "parameters": [
+        "str",
+        "locals",
+        "options"
+      ]
+    },
+    {
+      "name": "test",
+      "parameters": [
+        "str",
+        "regex"
+      ]
+    },
+    {
+      "name": "append",
+      "parameters": [
+        "str",
+        "suffix"
+      ]
+    },
+    {
+      "name": "camelcase",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "capitalize",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "capitalizeAll",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "center",
+      "parameters": [
+        "str",
+        "spaces"
+      ]
+    },
+    {
+      "name": "chop",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "dashcase",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "dotcase",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "downcase",
+      "parameters": []
+    },
+    {
+      "name": "ellipsis",
+      "parameters": [
+        "str",
+        "limit"
+      ]
+    },
+    {
+      "name": "hyphenate",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "isString",
+      "parameters": [
+        "value"
+      ]
+    },
+    {
+      "name": "lowercase",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "occurrences",
+      "parameters": [
+        "str",
+        "substring"
+      ]
+    },
+    {
+      "name": "pascalcase",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "pathcase",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "plusify",
+      "parameters": [
+        "str",
+        "ch"
+      ]
+    },
+    {
+      "name": "prepend",
+      "parameters": [
+        "str",
+        "prefix"
+      ]
+    },
+    {
+      "name": "raw",
+      "parameters": [
+        "options"
+      ]
+    },
+    {
+      "name": "remove",
+      "parameters": [
+        "str",
+        "ch"
+      ]
+    },
+    {
+      "name": "removeFirst",
+      "parameters": [
+        "str",
+        "ch"
+      ]
+    },
+    {
+      "name": "replace",
+      "parameters": [
+        "str",
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "replaceFirst",
+      "parameters": [
+        "str",
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "sentence",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "snakecase",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "split",
+      "parameters": [
+        "str",
+        "ch"
+      ]
+    },
+    {
+      "name": "startsWith",
+      "parameters": [
+        "prefix",
+        "str",
+        "options"
+      ]
+    },
+    {
+      "name": "titleize",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "trim",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "trimLeft",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "trimRight",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "truncate",
+      "parameters": [
+        "str",
+        "limit",
+        "suffix"
+      ]
+    },
+    {
+      "name": "truncateWords",
+      "parameters": [
+        "str",
+        "count",
+        "suffix"
+      ]
+    },
+    {
+      "name": "upcase",
+      "parameters": []
+    },
+    {
+      "name": "uppercase",
+      "parameters": [
+        "str"
+      ]
+    },
+    {
+      "name": "ne",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "mod",
+      "parameters": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "name": "randNum",
+      "parameters": [
+        "min",
+        "max"
+      ]
+    },
+    {
+      "name": "randList",
+      "parameters": [
+        "...options"
+      ]
+    }
+  ]
+}

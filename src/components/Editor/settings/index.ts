@@ -2,6 +2,7 @@ import * as monaco from 'monaco-editor';
 
 import { CUSTOM_LANGUAGE, SNIPPETS } from '../constants';
 import customCommands from '../constants/commands.json';
+import { helpers } from '../constants/helpers.json';
 
 export function setup() {
   // Constructor for new language
@@ -22,12 +23,26 @@ export function setup() {
         endColumn: model.getWordUntilPosition(position).endColumn,
       };
 
+      const helperCompletions: monaco.languages.CompletionItem[] =
+        helpers.map((helper) => {
+          const insertText = `${helper.name} ${helper.parameters.join(' ')}`;
+
+          return {
+            label: helper.name,
+            kind: monaco.languages.CompletionItemKind.Method,
+            documentation: `Handlebars helper: ${helper.name}`,
+            detail: `Handlebars helper: ${helper.name}`,
+            insertText,
+            range: range,
+          };
+        });
+
       const commandCompletions: monaco.languages.CompletionItem[] =
         customCommands.map((cmd) => ({
           label: cmd.command,
           kind: monaco.languages.CompletionItemKind.Method,
-          documentation: cmd.help,
-          detail: cmd.description,
+          documentation: `7D2D command: ${cmd.help}`,
+          detail: `7D2D command: ${cmd.description}`,
           insertText: cmd.command,
           range: range,
         }));
@@ -44,7 +59,7 @@ export function setup() {
       );
 
       const suggestions: monaco.languages.CompletionItem[] =
-        snippets.concat(commandCompletions);
+        snippets.concat(commandCompletions).concat(helperCompletions);
       return { suggestions: suggestions };
     },
   });
