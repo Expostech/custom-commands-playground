@@ -19,7 +19,15 @@ export const snippets: ISnippet[] = [
       '\tfinal case',
       '{{/if}}',
     ].join('\n'),
-  }
+  },
+  {
+    label: 'each',
+    insertText: [
+      '{{#each server.onlinePlayers}}',
+      '\t$0',
+      '{{/each}}'
+    ].join('\n'),
+  },
 ];
 
 interface ISnippet {
