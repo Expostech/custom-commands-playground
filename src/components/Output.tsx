@@ -2,7 +2,7 @@ import * as monaco from 'monaco-editor';
 import { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import { editorOptions, setup } from './Editor/settings';
+import { editorOptions } from './Editor/settings';
 
 const EditorContainer = styled.div`
   height: 100%;
@@ -24,7 +24,6 @@ export const Output: FC<IProps> = ({ output = '' }) => {
   useEffect(() => {
     if (ref.current) {
       saveEditor(monaco.editor.create(ref.current, editorOptions('', { readOnly: true })));
-      setup(); // setup editor default settings (language)
     }
 
     return () => {

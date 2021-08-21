@@ -3,7 +3,7 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import { getData } from '../services/data';
-import { editorOptions, setup } from './Editor/settings';
+import { editorOptions } from './Editor/settings';
 
 const EditorContainer = styled.div`
   height: 100vh;
@@ -30,7 +30,6 @@ export const Data: FC<IProps> = ({ data, setData }) => {
   useEffect(() => {
     if (ref.current) {
       saveEditor(monaco.editor.create(ref.current, editorOptions('', { readOnly: true, language: 'json' })));
-      setup(); // setup editor default settings (language)
     }
 
     return () => {
