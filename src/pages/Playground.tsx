@@ -1,11 +1,12 @@
 import axios from 'axios';
 import * as monaco from 'monaco-editor';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import { ExecuteButton, Header, NavBar, Output } from '../components';
 import { Data } from '../components/Data';
 import { editorOptions, setup } from '../components/Editor/settings';
+import { OptionsContext } from '../services/optionsContext';
 
 const Wrapper = styled.div`
   max-height: 100vh;
@@ -48,6 +49,7 @@ const formatOutput = (output: string[], errors: string[]) => {
 };
 
 export const Playground: FC = () => {
+  const options = useContext(OptionsContext);
   const [editor,setEditor] = useState<monaco.editor.IStandaloneCodeEditor>();
   const [output,setOutput] = useState('');
   const [data, setData] = useState({ data: {} });
@@ -58,7 +60,7 @@ export const Playground: FC = () => {
 
   async function executeCommand() {
     try {
-      const r = await axios.post(url, { template: editor?.getModel()?.getValue(), data: data.data });
+      const r = await axios.post(url, { template: editor?.getModel()?.getValue(), data: data.data, serverId: options.serverId });
       const formatted = formatOutput(r.data.output, r.data.errors);
       setOutput(formatted);
     } catch (error) {

@@ -4,9 +4,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { PageNotFound, Playground } from './pages';
 
 export const Router: FC = () => (
-  <BrowserRouter >
+  <BrowserRouter basename="/sdtdserver">
     <Routes>
-      <Route element={<Playground />} path="/playground" />
+      <Route element={<Playground />} path=":id/playground" />
       <Route element={<PageNotFound />} path="*" />
     </Routes>
   </BrowserRouter>
