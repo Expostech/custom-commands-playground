@@ -17,7 +17,7 @@ export class HTTP {
     return new URL(
       process.env.REACT_APP_CSMM_URL
         ? `${process.env.REACT_APP_CSMM_URL}/api/playground`
-        : '/api/playground'
+        : `${window.location.protocol}//${window.location.host}/api/playground`
     );
   }
 
