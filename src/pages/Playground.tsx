@@ -1,4 +1,3 @@
-import { Layout } from 'antd';
 import * as monaco from 'monaco-editor';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -8,8 +7,6 @@ import { Data } from '../components/Data';
 import { editorOptions, setup } from '../components/Editor/settings';
 import { HTTP } from '../services/http';
 import { OptionsContext } from '../services/optionsContext';
-
-const { Sider, Content } = Layout;
 
 const PlaygroundContainer = styled.div`
   position: relative;

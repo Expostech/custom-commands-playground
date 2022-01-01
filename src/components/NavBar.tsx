@@ -16,17 +16,12 @@ const Container = styled.div`
 export const NavBar: FC = () => {
   const options = useContext(OptionsContext);
 
-  function onClick() {
-    console.log('click');
-  }
-
   return (
     <Container>
       <Menu
         defaultOpenKeys={['sub1']}
         defaultSelectedKeys={['1']}
         mode="inline"
-        onClick={onClick}
       >
         <SubMenu icon={<MailOutlined />} key="sub1" title="Navigation One">
           <Menu.Item key="editor">

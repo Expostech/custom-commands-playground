@@ -33,7 +33,6 @@ export const Variables: FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const onSelectChange = (newSelectedRowKeys: Array<string | number>) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
