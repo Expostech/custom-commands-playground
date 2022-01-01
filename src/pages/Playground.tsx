@@ -1,25 +1,22 @@
-import axios from 'axios';
+import { Layout } from 'antd';
 import * as monaco from 'monaco-editor';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import { ExecuteButton, Header, NavBar, Output } from '../components';
+import { ExecuteButton, Output } from '../components';
 import { Data } from '../components/Data';
 import { editorOptions, setup } from '../components/Editor/settings';
+import { HTTP } from '../services/http';
 import { OptionsContext } from '../services/optionsContext';
 
-const Wrapper = styled.div`
-  max-height: 100vh;
-  overflow-y: hidden;
-`;
+const { Sider, Content } = Layout;
 
 const PlaygroundContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100vh;
   display: flex;
-  align-items: stretch;
-  justify-content: center;
+  align-items: center;
 `;
 
 const EditorContainer = styled.div`
@@ -30,7 +27,6 @@ const EditorContainer = styled.div`
 const RightContainer = styled.div`
   position: relative;
   width: 100%;
-  padding-right: 200px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -38,11 +34,13 @@ const RightContainer = styled.div`
   justify-content: center;
 `;
 
-const formatOutput = (output: string[], errors: string[]) => {
-  const joinedOutput = output.join('\n');
+const formatOutput = (output: string[] | undefined, errors: string[]) => {
+  const joinedOutput = Array.isArray(output) ? output.join('\n') : '';
 
   if (errors.length) {
-    return `${joinedOutput}\n\n\n------------------\n\n\nERRORS\n\n\n${errors.join('\n')}`;
+    return `${joinedOutput}\n\n\n------------------\n\n\nERRORS\n\n\n${errors.join(
+      '\n'
+    )}`;
   }
 
   return joinedOutput;
@@ -50,18 +48,18 @@ const formatOutput = (output: string[], errors: string[]) => {
 
 export const Playground: FC = () => {
   const options = useContext(OptionsContext);
-  const [editor,setEditor] = useState<monaco.editor.IStandaloneCodeEditor>();
-  const [output,setOutput] = useState('');
+  const [editor, setEditor] = useState<monaco.editor.IStandaloneCodeEditor>();
+  const [output, setOutput] = useState('');
   const [data, setData] = useState({ data: {} });
-
-  const url = process.env.REACT_APP_CSMM_URL ? `${process.env.REACT_APP_CSMM_URL}/api/playground/execute` : '/api/playground/execute';
 
   const ref = useRef<HTMLDivElement>(null);
 
   async function executeCommand() {
     try {
-      const r = await axios.post(url, { template: editor?.getModel()?.getValue(), data: data.data, serverId: options.serverId });
-      const formatted = formatOutput(r.data.output, r.data.errors);
+      const http = new HTTP(options);
+      const template = editor?.getModel()?.getValue() ?? '';
+      const r = await http.executeTemplate(template, data.data);
+      const formatted = formatOutput(r.output, r.errors);
       setOutput(formatted);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -84,17 +82,13 @@ export const Playground: FC = () => {
   }, []);
 
   return (
-    <Wrapper>
-      <Header />
-      <PlaygroundContainer>
-        <NavBar />
-        <ExecuteButton onClick={() => executeCommand()} />
-        <EditorContainer ref={ref} />
-        <RightContainer>
-          <Output output={output}/>
-          <Data data={data} setData={setData} />
-        </RightContainer>
-      </PlaygroundContainer>
-    </Wrapper>
+    <PlaygroundContainer>
+      <ExecuteButton onClick={executeCommand} />
+      <EditorContainer ref={ref} />
+      <RightContainer>
+        <Output output={output} />
+        <Data data={data} setData={setData} />
+      </RightContainer>
+    </PlaygroundContainer>
   );
 };

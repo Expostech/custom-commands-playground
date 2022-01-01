@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface IOptionsContext {
+export interface IOptionsContext {
   serverId: string
 }
 

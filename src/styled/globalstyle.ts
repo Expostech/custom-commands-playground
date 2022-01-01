@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+
 import { ThemeType } from './theme';
 
 export const GlobalStyle = createGlobalStyle<{ theme: ThemeType }>`
@@ -24,7 +25,6 @@ export const GlobalStyle = createGlobalStyle<{ theme: ThemeType }>`
     overflow: hidden;
   }
   #root {
-    max-width: 1920px;
     margin: 0 auto;
     overflow-x: hidden;
   }

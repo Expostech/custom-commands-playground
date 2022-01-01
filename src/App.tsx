@@ -1,3 +1,5 @@
+import 'antd/dist/antd.css';
+
 import { FC, StrictMode } from 'react';
 import { ThemeProvider } from 'styled-components';
 
