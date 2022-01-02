@@ -5,8 +5,10 @@ import styled from 'styled-components';
 import { ExecuteButton, Output } from '../components';
 import { Data } from '../components/Data';
 import { editorOptions, setup } from '../components/Editor/settings';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import { HTTP } from '../services/http';
 import { OptionsContext } from '../services/optionsContext';
+import { debounce } from '../services/util/debounce';
 
 const PlaygroundContainer = styled.div`
   position: relative;
@@ -45,11 +47,20 @@ const formatOutput = (output: string[] | undefined, errors: string[]) => {
 
 export const Playground: FC = () => {
   const options = useContext(OptionsContext);
+  const [editorContent, setEditorContent] = useLocalStorage<string>('editor-content', 'Bob');
+
   const [editor, setEditor] = useState<monaco.editor.IStandaloneCodeEditor>();
   const [output, setOutput] = useState('');
   const [data, setData] = useState({ data: {} });
 
   const ref = useRef<HTMLDivElement>(null);
+
+  function storeEditorContent(editor: monaco.editor.IStandaloneCodeEditor) {
+    const editorValue = editor.getModel()?.getValue();
+    if (editorValue) {
+      setEditorContent(editorValue);
+    }
+  }
 
   async function executeCommand() {
     try {
@@ -64,13 +75,13 @@ export const Playground: FC = () => {
     }
   }
 
-  function saveEditor(editor: monaco.editor.IStandaloneCodeEditor) {
-    setEditor(editor);
-  }
-
   useEffect(() => {
     if (ref.current) {
-      saveEditor(monaco.editor.create(ref.current, editorOptions()));
+      const newEditor = monaco.editor.create(ref.current, editorOptions(editorContent));
+      setEditor(newEditor);
+      newEditor.onKeyUp(debounce(() => {
+        storeEditorContent(newEditor);
+      }, 1000));
       setup(); // setup editor default settings (language)
     }
     return () => {
