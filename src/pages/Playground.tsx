@@ -91,6 +91,8 @@ export const Playground: FC = () => {
 
   return (
     <PlaygroundContainer>
+      {/*@ts-expect-error aa*/}
+      <button onClick={methodDoesNotExist}>Break the world</button>
       <ExecuteButton onClick={executeCommand} />
       <EditorContainer ref={ref} />
       <RightContainer>
