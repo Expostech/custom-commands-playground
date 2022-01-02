@@ -45,9 +45,16 @@ const formatOutput = (output: string[] | undefined, errors: string[]) => {
   return joinedOutput;
 };
 
+const initialValue = `{{#if (gt player.role.level 10 )}} 
+pm {{player.steamId}} "Hey {{player.name}} You have the correct role to execute this command";
+{{else}} 
+pm {{player.steamId}} "Sorry, {{player.name}}, you're not allowed to do that";
+{{/if}}
+`;
+
 export const Playground: FC = () => {
   const options = useContext(OptionsContext);
-  const [editorContent, setEditorContent] = useLocalStorage<string>('editor-content', 'Bob');
+  const [editorContent, setEditorContent] = useLocalStorage<string>('editor-content', initialValue);
 
   const [editor, setEditor] = useState<monaco.editor.IStandaloneCodeEditor>();
   const [output, setOutput] = useState('');
