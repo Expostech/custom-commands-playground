@@ -10,12 +10,12 @@ import { DEFAULT, GlobalStyle } from './styled';
 export const App: FC = () => {
   return (
     <StrictMode>
-      <OptionsContext.Provider value={{ serverId: getServerId() }}>
-        <ThemeProvider theme={DEFAULT}>
-          <GlobalStyle />
+      <ThemeProvider theme={DEFAULT}>
+        <GlobalStyle />
+        <OptionsContext.Provider value={{ serverId: getServerId() }}>
           <Router />
-        </ThemeProvider>
-      </OptionsContext.Provider>
+        </OptionsContext.Provider>
+      </ThemeProvider>
     </StrictMode>
   );
 };

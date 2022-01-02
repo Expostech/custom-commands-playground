@@ -10,6 +10,15 @@ export interface IVariable {
   id: string;
 }
 
+export interface IExecution {
+  data: Record<string, never>;
+  errors: Array<string>;
+  reason: string;
+  results: Array<string>;
+  template: Array<string>;
+  timestamp: string
+}
+
 export class HTTP {
   constructor(protected options: IOptionsContext) { }
 
@@ -36,6 +45,11 @@ export class HTTP {
   async deleteVariable(id: string): Promise<void> {
     await axios.delete(this.getUrl(`/variable/${id}`).toString());
     return;
+  }
+
+  async getExecutions(): Promise<Array<IExecution>> {
+    const response = await axios(this.getUrl('/executions').toString());
+    return response.data.executions;
   }
 
   async executeTemplate(template: string, data: Record<string, any>): Promise<{output: string[], errors: string[]}> {

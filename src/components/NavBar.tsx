@@ -34,6 +34,11 @@ export const NavBar: FC = () => {
               <span>Variables</span>
             </Link>
           </Menu.Item>
+          <Menu.Item key="executions">
+            <Link to={`/${options.serverId}/playground/executions`}>
+              <span>Executions</span>
+            </Link>
+          </Menu.Item>
           <Menu.Item key="settings">
             <Link to={`/${options.serverId}/playground/settings`}>
               <span>Settings</span>

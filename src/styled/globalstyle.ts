@@ -4,7 +4,7 @@ import { ThemeType } from './theme';
 
 export const GlobalStyle = createGlobalStyle<{ theme: ThemeType }>`
   *::selection {
-    background-color: #3CCD6A;
+    background-color: #ffffff;
     color: white;
   }
 
@@ -23,6 +23,7 @@ export const GlobalStyle = createGlobalStyle<{ theme: ThemeType }>`
     margin: 0;
     transition: background-color 0.2s linear;
     overflow: hidden;
+    background-color: ${({ theme }) => theme.bg};
   }
   #root {
     margin: 0 auto;
