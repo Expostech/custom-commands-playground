@@ -65,14 +65,7 @@ export function setup() {
   });
 }
 
-const initialValue = `{{#if (gt player.role.level 10 )}} 
-pm {{player.steamId}} "Hey {{player.name}} You have the correct role to execute this command";
-{{else}} 
-pm {{player.steamId}} "Sorry, {{player.name}}, you're not allowed to do that";
-{{/if}}
-`;
-
-export const editorOptions = (init = initialValue, extraOptions = {}) => {
+export const editorOptions = (init: string, extraOptions = {}) => {
   return {
     value: init,
     language: CUSTOM_LANGUAGE,
