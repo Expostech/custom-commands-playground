@@ -6,7 +6,7 @@ import { getData } from '../services/data';
 import { editorOptions } from './Editor/settings';
 
 const EditorContainer = styled.div`
-  height: 100vh;
+  height: 100%;
   width: 100%;
 `;
 
