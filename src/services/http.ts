@@ -65,6 +65,18 @@ export class HTTP {
     return response.data.result;
   }
 
+  async editVariable(id: string, name: string, value: string, preventDeletion: boolean) {
+    const data = {
+        id: id,
+        name: name,
+        value: value,
+        preventDeletion: preventDeletion,
+    }
+
+    await axios.put(this.getUrl(`/variable/${id}`).toString(), data);
+    return;
+  }
+
   async deleteVariable(id: string): Promise<void> {
     await axios.delete(this.getUrl(`/variable/${id}`).toString());
     return;

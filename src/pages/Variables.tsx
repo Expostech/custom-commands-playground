@@ -26,12 +26,13 @@ export const Variables: FC = () => {
 
   const [variables, setVariables] = useState<Array<IVariable>>([]);
 
-  const [skipPageReset, setSkipPageReset] = useState(false);
+  const [skipPageReset, setSkipPageReset] = useState<boolean>(false);
 
-  const [editableRowIndex, setEditableRowIndex] = useState(null);
+  const [editableRowIndex, setEditableRowIndex] = useState<number | null>(null);
 
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [totalEntries, setTotalEntries] = useState<number>(0);
   const [pageCount, setPageCount] = useState<number>(0);
   const [pageNumber, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -44,10 +45,9 @@ export const Variables: FC = () => {
   const [activeDropdown, setActiveDropdown] = useState<string>('');
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<Array<string | number>>([]);
-
   const [selectedRows, setSelectedRows] = useState<Array<string>>([]);
 
-  const [totalEntries, setTotalEntries] = useState<number>(0);
+  const [preventDeletion, setPreventDeletion] = useState<boolean>(false);
 
   const columns: Column[] = [
     {
@@ -133,14 +133,38 @@ export const Variables: FC = () => {
     setLoading(false);
   };
 
-  const deleteVariables = async (ids: Array<string | number>) => {
+  async function deleteVariables(ids: Array<string | number>) {
     const http = new HTTP(options);
     await Promise.all(ids.map((id) => {
       return http.deleteVariable(id.toString());
     }));
     loadVariables();
     setSelectedRowKeys([]);
-  };
+  }
+
+  async function deleteVariable(id: string) {
+    const http = new HTTP(options);
+
+    await http.deleteVariable(id);
+    loadVariables();
+  }
+
+  async function editVariable(id: string, name: string, value: string, preventDeletion: boolean) {
+    const http = new HTTP(options);
+
+    await http.editVariable(id, name, value, preventDeletion);
+    loadVariables();
+  }
+
+  function rowIndexToKey(index: number) {
+    if (variables[index]) {
+      return variables[index].id;
+    }
+
+    console.error(`variables[${index}] is undefined.`, variables);
+
+    return -1;
+  }
 
   useEffect(() => {
     if (editableRowIndex === null) {
@@ -153,14 +177,22 @@ export const Variables: FC = () => {
     if (selectedRows.length > 0){
       var keys: string[] = [];
 
+      var locked: boolean = false;
+
       for (var i = 0; i < selectedRows.length; i++) {
         var id = Number.parseInt(selectedRows[i]);
         keys[i] = variables[id].id;
+
+        if (variables[id].preventDeletion) {
+          locked = true;
+        }
       }
 
+      setPreventDeletion(locked);
       setSelectedRowKeys(keys);
     }
     else{
+      setPreventDeletion(false);
       setSelectedRowKeys([]);
     }
   }, [selectedRows])
@@ -198,6 +230,11 @@ export const Variables: FC = () => {
     setSelectedRows: setSelectedRows,
 
     modifyTableData: modifyTableData,
+
+    editVariable: editVariable,
+    deleteVariable: deleteVariable,
+
+    rowIndexToKey: rowIndexToKey
   }
 
   function onChange(pageNumber: number, pageSize: number) {
@@ -214,11 +251,14 @@ export const Variables: FC = () => {
           Reload
         </Button>
         {selectedRowKeys.length > 0 &&
-          <><span style={{ margin: 8 }}>
-            {`Selected ${selectedRowKeys.length} items`}
-          </span><Button danger loading={loading} onClick={() => deleteVariables(selectedRowKeys)} type="primary">
+          <>
+          <span style={{ margin: 8 }}>
+            {preventDeletion ? 'Locked item selected!' : `Selected ${selectedRowKeys.length} items`}
+          </span>
+          <Button danger disabled={preventDeletion} loading={loading} onClick={() => deleteVariables(selectedRowKeys)} type="primary">
               Delete
-            </Button></>
+          </Button>
+          </>
         }
       </div>
       <div className='ant-table'>

@@ -34,7 +34,13 @@ export interface ITableProps {
 
     setSelectedRows: Function,
 
-    modifyTableData: Function
+    modifyTableData: Function,
+
+    editVariable: Function,
+    
+    deleteVariable: Function,
+
+    rowIndexToKey: Function,
 }
 
 export interface IColumnFilter {

@@ -276,7 +276,10 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
         modifyTableData,
         activeDropdown,
         setActiveDropdown,
-        setSelectedRows
+        setSelectedRows,
+        editVariable,
+        deleteVariable,
+        rowIndexToKey,
     } = tableProps;
 
     if (currentPage === -1) {
@@ -315,6 +318,9 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
             manualPagination: true,
             pageCount: totalPages,
             editableRowIndex,
+            editVariable,
+            deleteVariable,
+            rowIndexToKey,
             setEditableRowIndex,
             activeDropdown,
             setActiveDropdown,
@@ -329,9 +335,9 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
             hooks.visibleColumns.push((columns) => [
                 {
                     id: "selection",
-                    width: 100,
-                    minWidth: 100,
-                    maxWidth: 100,
+                    width: 48,
+                    minWidth: 48,
+                    maxWidth: 48,
                     disableSortBy: true,
                     Header(props) {
 
@@ -395,7 +401,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                         return (
                             <div>
                                 <IndeterminateCheckbox id='multiSelect' {...indeterminateCheckboxProps} />
-                                <Dropdown overlay={menu} placement='bottomLeft'>
+                                <Dropdown overlay={menu} trigger={['click']} placement='bottomLeft'>
                                     <SelectDropdownButton>
                                         <DownOutlined />
                                     </SelectDropdownButton>
@@ -419,9 +425,18 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                     width: 320,
                     minWidth: 320,
                     maxWidth: 320,
-                    Cell: ({ row, setEditableRowIndex, editableRowIndex }) => (
+                    Cell: ({ row, setEditableRowIndex, editableRowIndex, rowIndexToKey, editVariable, deleteVariable }) => (
                         <div>
-                            <ActionButton>Unlock</ActionButton>
+                            <ActionButton
+                                onClick={() => {
+                                    const id: number = rowIndexToKey(row.index);
+                                    const updatedRow = row.values;
+                                    editVariable(id.toString(), updatedRow.name, updatedRow.value, !updatedRow.preventDeletion);
+                                }}
+                                style={{minWidth: 96.69}} 
+                            >
+                                {row.values.preventDeletion ? 'Unlock' : 'Lock'}
+                            </ActionButton>
                             <ActionButton
                                 onClick={() => {
                                     const currentIndex = row.index;
@@ -430,12 +445,12 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                                     } else {
                                         setEditableRowIndex(null);
                                         const updatedRow = row.values;
-                                        console.log("updated row values:");
-                                        console.log(updatedRow);
-                                        // Call API to update var
+                                        const id: number = rowIndexToKey(row.index);
+                                        editVariable(id.toString(), updatedRow.name, updatedRow.value, updatedRow.preventDeletion);
                                         setSkipPageReset(false);
                                     }
                                 }}
+                                style={{minWidth: 82.71}}
                             >
                                 {editableRowIndex !== row.index ? "Edit" : "Save"}
                             </ActionButton>
@@ -443,12 +458,14 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                                 onClick={() => {
                                     const currentIndex = row.index;
                                     if (editableRowIndex !== currentIndex) {
-                                        // Delete row
+                                        const id: number = rowIndexToKey(row.index);
+                                        deleteVariable(id);
                                     } else {
                                         setEditableRowIndex(null);
                                         setSkipPageReset(false);
                                     }
                                 }}
+                                style={{minWidth: 96}}
                             >
                                 {editableRowIndex !== row.index ? "Delete" : "Cancel"}
                             </ActionButtonDanger>
