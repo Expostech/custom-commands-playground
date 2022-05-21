@@ -37,7 +37,7 @@ const IndeterminateCheckbox = forwardRef<HTMLInputElement, Props>(
 
     return (
       <React.Fragment>
-        <Checkbox id={rest.id} type="checkbox" ref={combinedRef} {...rest} />
+        <Checkbox id={rest.id} ref={combinedRef} type="checkbox" {...rest} />
       </React.Fragment>
     );
   }

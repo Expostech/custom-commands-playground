@@ -3,25 +3,22 @@ import styled from 'styled-components';
 import { ITableProps, IColumnSorter, IColumnFilter } from '../components/TableInterfaces';
 
 import { Button, Pagination } from 'antd';
-import { FC, useContext, useEffect, useState, forwardRef, useRef, useMemo, EventHandler } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 
 import { HTTP, IVariable } from '../services/http';
 import { OptionsContext } from '../services/optionsContext';
 
 import { Table } from '../components/Table';
 
-import { Console, debug } from 'console';
-import { date } from 'faker';
-import { Column, ColumnInstance } from 'react-table';
+import { Column } from 'react-table';
 
 const PaginationWrapper = styled.div`
   margin-top: 10px;
   right: 0;
   position: absolute;
-`
+`;
 
 export const Variables: FC = () => {
-
   const options = useContext(OptionsContext);
 
   const [variables, setVariables] = useState<Array<IVariable>>([]);
@@ -84,7 +81,7 @@ export const Variables: FC = () => {
       disableFilters: true,
       width: 200,
     },
-  ]
+  ];
 
   const modifyTableData = (index: any, id: any, value: any) => {
     setSkipPageReset(true);
@@ -99,16 +96,16 @@ export const Variables: FC = () => {
       return v;
     })
     );
-  }
+  };
 
   const loadVariables = async () => {
     setLoading(true);
 
-    var sortedColumns: string[] = Object.keys(columnSorters);
-    var sortTypes: string[] = Object.values(columnSorters);
+    const sortedColumns: string[] = Object.keys(columnSorters);
+    const sortTypes: string[] = Object.values(columnSorters);
 
-    var filteredColumns: string[] = Object.keys(columnFilters);
-    var filterValues: string[] = Object.values(columnFilters);
+    const filteredColumns: string[] = Object.keys(columnFilters);
+    const filterValues: string[] = Object.values(columnFilters);
 
     const http = new HTTP(options);
 
@@ -168,19 +165,19 @@ export const Variables: FC = () => {
 
   useEffect(() => {
     if (editableRowIndex === null) {
-      console.log('Loading Variables!')
+      console.log('Loading Variables!');
       loadVariables();
     }
   }, [pageNumber, pageSize, columnSorters, columnFilters, searchQuery]);
 
   useEffect(() => {
     if (selectedRows.length > 0){
-      var keys: string[] = [];
+      const keys: string[] = [];
 
-      var locked: boolean = false;
+      let locked: boolean = false;
 
-      for (var i = 0; i < selectedRows.length; i++) {
-        var id = Number.parseInt(selectedRows[i]);
+      for (let i = 0; i < selectedRows.length; i++) {
+        const id = Number.parseInt(selectedRows[i]);
         keys[i] = variables[id].id;
 
         if (variables[id].preventDeletion) {
@@ -191,13 +188,13 @@ export const Variables: FC = () => {
       setPreventDeletion(locked);
       setSelectedRowKeys(keys);
     }
-    else{
+    else {
       setPreventDeletion(false);
       setSelectedRowKeys([]);
     }
-  }, [selectedRows])
+  }, [selectedRows]);
 
-  let tableProps: ITableProps = {
+  const tableProps: ITableProps = {
     columns: columns,
     data: variables,
 
@@ -235,7 +232,7 @@ export const Variables: FC = () => {
     deleteVariable: deleteVariable,
 
     rowIndexToKey: rowIndexToKey
-  }
+  };
 
   function onChange(pageNumber: number, pageSize: number) {
     setPage(pageNumber - 1);
@@ -252,23 +249,23 @@ export const Variables: FC = () => {
         </Button>
         {selectedRowKeys.length > 0 &&
           <>
-          <span style={{ margin: 8 }}>
-            {preventDeletion ? 'Locked item selected!' : `Selected ${selectedRowKeys.length} items`}
-          </span>
-          <Button danger disabled={preventDeletion} loading={loading} onClick={() => deleteVariables(selectedRowKeys)} type="primary">
+            <span style={{ margin: 8 }}>
+              {preventDeletion ? 'Locked item selected!' : `Selected ${selectedRowKeys.length} items`}
+            </span>
+            <Button danger disabled={preventDeletion} loading={loading} onClick={() => deleteVariables(selectedRowKeys)} type="primary">
               Delete
-          </Button>
+            </Button>
           </>
         }
       </div>
-      <div className='ant-table'>
-        <div className='ant-table-container'>
-          <div className='ant-table-content'>
+      <div className="ant-table">
+        <div className="ant-table-container">
+          <div className="ant-table-content">
             <Table {...tableProps} />
           </div>
         </div>
         <PaginationWrapper>
-          <Pagination showSizeChanger showQuickJumper defaultCurrent={1} total={totalEntries} onChange={onChange} size='default' />
+          <Pagination defaultCurrent={1} onChange={onChange} showQuickJumper showSizeChanger size="default" total={totalEntries} />
         </PaginationWrapper>
       </div>
     </div>

@@ -67,11 +67,11 @@ export class HTTP {
 
   async editVariable(id: string, name: string, value: string, preventDeletion: boolean) {
     const data = {
-        id: id,
-        name: name,
-        value: value,
-        preventDeletion: preventDeletion,
-    }
+      id: id,
+      name: name,
+      value: value,
+      preventDeletion: preventDeletion,
+    };
 
     await axios.put(this.getUrl(`/variable/${id}`).toString(), data);
     return;
@@ -87,7 +87,7 @@ export class HTTP {
     return response.data.executions;
   }
 
-  async executeTemplate(template: string, data: Record<string, any>): Promise<{output: string[], errors: string[]}> {
+  async executeTemplate(template: string, data: Record<string, any>): Promise<{ output: string[], errors: string[] }> {
     const response = await axios
       .post(this.getUrl('/execute').toString(), { template, data });
     return response.data;
