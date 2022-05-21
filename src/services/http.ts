@@ -40,7 +40,7 @@ export class HTTP {
   getUrl(path: string) {
     const url = this.getBaseUrl();
     url.pathname = `${url.pathname}${path}`;
-    url.searchParams.append('serverId', '1');
+    url.searchParams.append('serverId', this.options.serverId);
     return url;
   }
 
