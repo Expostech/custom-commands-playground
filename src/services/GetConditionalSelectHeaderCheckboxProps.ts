@@ -1,7 +1,5 @@
 import { HeaderProps, Row } from 'react-table';
 
-https://github.com/TanStack/react-table/issues/2988#issuecomment-872382273
-
 interface GetConditionalSelectHeaderCheckboxProps {
   /** react-table's header props */
   headerProps: React.PropsWithChildren<HeaderProps<any>>

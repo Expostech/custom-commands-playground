@@ -158,14 +158,11 @@ export const Variables: FC = () => {
       return variables[index].id;
     }
 
-    console.error(`variables[${index}] is undefined.`, variables);
-
     return -1;
   }
 
   useEffect(() => {
     if (editableRowIndex === null) {
-      console.log('Loading Variables!');
       loadVariables();
     }
   }, [pageNumber, pageSize, columnSorters, columnFilters, searchQuery]);
@@ -238,8 +235,6 @@ export const Variables: FC = () => {
     setPage(pageNumber - 1);
     setPageSize(pageSize);
   }
-
-  console.log(pageCount);
 
   return (
     <div>

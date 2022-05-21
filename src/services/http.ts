@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { stringify } from 'querystring';
 
 import { IOptionsContext } from './optionsContext';
 
@@ -59,8 +58,6 @@ export class HTTP {
     };
 
     const response = await axios.get(this.getUrl('/variable').toString(), config);
-
-    console.log(response.data.result);
 
     return response.data.result;
   }
