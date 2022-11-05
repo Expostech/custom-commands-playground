@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import { idText } from 'typescript';
 
 import { IOptionsContext } from './optionsContext';
 
@@ -24,6 +25,10 @@ export interface IResponseData {
   variables: Array<IVariable>;
   pageCount: number;
   totalEntries: number;
+}
+
+export interface IVariableCheckData {
+  isUnique: boolean;
 }
 
 export class HTTP {
@@ -60,6 +65,19 @@ export class HTTP {
     const response = await axios.get(this.getUrl('/variable').toString(), config);
 
     return response.data.result;
+  }
+
+  async checkVariable(name: string, id: string): Promise<IVariableCheckData> {
+    const config: AxiosRequestConfig = {
+      params: {
+        id: id,
+        name: name,
+      }
+    };
+
+    const response = await axios.get(this.getUrl('/variable/check').toString(), config);
+
+    return response.data;
   }
 
   async editVariable(id: string, name: string, value: string, preventDeletion: boolean) {

@@ -32,6 +32,9 @@ export interface ITableProps {
     editableRowIndex: number | null,
     setEditableRowIndex: Function,
 
+    validationError: number,
+    setValidationError: Function,
+
     setSelectedRows: Function,
 
     modifyTableData: Function,
@@ -39,6 +42,8 @@ export interface ITableProps {
     editVariable: Function,
     
     deleteVariable: Function,
+
+    checkVariable: Function,
 
     rowIndexToKey: Function,
 }

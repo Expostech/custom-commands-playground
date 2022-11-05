@@ -27,6 +27,8 @@ export const Variables: FC = () => {
 
   const [editableRowIndex, setEditableRowIndex] = useState<number | null>(null);
 
+  const [validationError, setValidationError] = useState<number>(-1);
+
   const [loading, setLoading] = useState<boolean>(true);
 
   const [totalEntries, setTotalEntries] = useState<number>(0);
@@ -130,6 +132,13 @@ export const Variables: FC = () => {
     setLoading(false);
   };
 
+  const checkVariable = async (name: string, id: string) : Promise<boolean> => {
+    const http = new HTTP(options);
+    const response = await http.checkVariable(name, id);
+
+    return response.isUnique;
+  }
+
   async function deleteVariables(ids: Array<string | number>) {
     const http = new HTTP(options);
     await Promise.all(ids.map((id) => {
@@ -221,12 +230,16 @@ export const Variables: FC = () => {
     editableRowIndex: editableRowIndex,
     setEditableRowIndex: setEditableRowIndex,
 
+    validationError: validationError,
+    setValidationError: setValidationError,
+
     setSelectedRows: setSelectedRows,
 
     modifyTableData: modifyTableData,
 
     editVariable: editVariable,
     deleteVariable: deleteVariable,
+    checkVariable: checkVariable,
 
     rowIndexToKey: rowIndexToKey
   };
@@ -260,7 +273,7 @@ export const Variables: FC = () => {
           </div>
         </div>
         <PaginationWrapper>
-          <Pagination defaultCurrent={1} onChange={onChange} showQuickJumper showSizeChanger size="default" total={totalEntries} />
+          <Pagination disabled={editableRowIndex !== null} defaultCurrent={1} onChange={onChange} showQuickJumper showSizeChanger size="default" total={totalEntries} />
         </PaginationWrapper>
       </div>
     </div>
