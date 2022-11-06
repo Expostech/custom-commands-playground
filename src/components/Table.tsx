@@ -421,9 +421,9 @@ function GlobalFilter ({
       <HeaderSeparator/>
       <SelectionLabel>{preventDeletion ? "Locked Item(s) Selected!" : `${selectedRowKeys.length} Items Selected`}</SelectionLabel>
       <HeaderSeparator/>
-      <HeaderButton disabled={selectedRowKeys.length === 0} danger={false} onClick={() => setVariableLock(selectedRowKeys, false)}>Unlock</HeaderButton>
-      <HeaderButton disabled={selectedRowKeys.length === 0} danger={false} onClick={() => setVariableLock(selectedRowKeys, true)}>Lock</HeaderButton>
-      <HeaderButton disabled={selectedRowKeys.length === 0 || preventDeletion} danger={true} onClick={() => deleteVariables(selectedRowKeys)}>Delete</HeaderButton>
+      <HeaderButton disabled={editableRowIndex !== null || selectedRowKeys.length === 0} danger={false} onClick={() => setVariableLock(selectedRowKeys, false)}>Unlock</HeaderButton>
+      <HeaderButton disabled={editableRowIndex !== null || selectedRowKeys.length === 0} danger={false} onClick={() => setVariableLock(selectedRowKeys, true)}>Lock</HeaderButton>
+      <HeaderButton disabled={editableRowIndex !== null || selectedRowKeys.length === 0 || preventDeletion} danger={true} onClick={() => deleteVariables(selectedRowKeys)}>Delete</HeaderButton>
     </SearchContainer>
   );
 }
@@ -625,7 +625,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
 
             return (
               <div>
-                <IndeterminateCheckbox id="multiSelect" {...indeterminateCheckboxProps} />
+                <IndeterminateCheckbox id="multiSelect" {...indeterminateCheckboxProps} disabled={editableRowIndex !== null} />
                 <Dropdown overlay={menu} placement="bottomLeft" trigger={['click']}>
                   <SelectDropdownButton>
                     <DownOutlined />
@@ -636,7 +636,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
           },
           Cell: ({ row }) => (
             <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} disabled={editableRowIndex !== null} />
             </div>
           ),
         },
