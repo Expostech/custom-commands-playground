@@ -1,6 +1,7 @@
 import { IVariable } from '../services/http';
 
 import { Column } from 'react-table';
+import { unique } from 'faker';
 
 export interface ITableProps {
     columns: Column[],
@@ -32,18 +33,27 @@ export interface ITableProps {
     editableRowIndex: number | null,
     setEditableRowIndex: Function,
 
-    validationError: number,
+    validationError: IValidationError | null,
     setValidationError: Function,
 
     setSelectedRows: Function,
+    selectedRowKeys: Array<string | number>,
+
+    setInitialRowData: Function,
+    initialRowData: {} | null,
+
+    preventDeletion: boolean,
 
     modifyTableData: Function,
 
     editVariable: Function,
-    
     deleteVariable: Function,
-
     checkVariable: Function,
+
+    loading: boolean,
+
+    loadVariables: Function,
+    deleteVariables: Function,
 
     rowIndexToKey: Function,
 }
@@ -54,4 +64,22 @@ export interface IColumnFilter {
 
 export interface IColumnSorter {
     [columnId: string]: string;
+}
+
+export interface IEditableCellProps {
+    value: any;
+    row: any;
+    column: any;
+    modifyTableData: Function;
+    editableRowIndex: Number | null;
+    validationError: boolean;
+    setValidationError: Function;
+    checkVariable: Function;
+    rowIndexToKey: Function;
+}
+
+export interface IValidationError {
+    row: number,
+    name: boolean,
+    value: boolean
 }

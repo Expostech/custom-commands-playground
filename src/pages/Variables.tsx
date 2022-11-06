@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { ITableProps, IColumnSorter, IColumnFilter } from '../components/TableInterfaces';
+import { ITableProps, IColumnSorter, IColumnFilter, IValidationError } from '../components/TableInterfaces';
 
 import { Button, Pagination } from 'antd';
 import { FC, useContext, useEffect, useState } from 'react';
@@ -26,8 +26,9 @@ export const Variables: FC = () => {
   const [skipPageReset, setSkipPageReset] = useState<boolean>(false);
 
   const [editableRowIndex, setEditableRowIndex] = useState<number | null>(null);
+  const [initialRowData, setInitialRowData] = useState<{} | null>(null);
 
-  const [validationError, setValidationError] = useState<number>(-1);
+  const [validationError, setValidationError] = useState<IValidationError | null>(null);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -130,6 +131,8 @@ export const Variables: FC = () => {
     );
 
     setLoading(false);
+
+    console.log("Loading...");
   };
 
   const checkVariable = async (name: string, id: string) : Promise<boolean> => {
@@ -230,10 +233,16 @@ export const Variables: FC = () => {
     editableRowIndex: editableRowIndex,
     setEditableRowIndex: setEditableRowIndex,
 
+    initialRowData: initialRowData,
+    setInitialRowData: setInitialRowData,
+
     validationError: validationError,
     setValidationError: setValidationError,
 
     setSelectedRows: setSelectedRows,
+
+    selectedRowKeys: selectedRowKeys,
+    rowIndexToKey: rowIndexToKey,
 
     modifyTableData: modifyTableData,
 
@@ -241,7 +250,12 @@ export const Variables: FC = () => {
     deleteVariable: deleteVariable,
     checkVariable: checkVariable,
 
-    rowIndexToKey: rowIndexToKey
+    preventDeletion: preventDeletion,
+
+    loading: loading,
+
+    loadVariables: loadVariables,
+    deleteVariables: deleteVariables,
   };
 
   function onChange(pageNumber: number, pageSize: number) {
@@ -251,21 +265,6 @@ export const Variables: FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 16 }}>
-        <Button loading={loading} onClick={loadVariables} type="primary">
-          Reload
-        </Button>
-        {selectedRowKeys.length > 0 &&
-          <>
-            <span style={{ margin: 8 }}>
-              {preventDeletion ? 'Locked item selected!' : `Selected ${selectedRowKeys.length} items`}
-            </span>
-            <Button danger disabled={preventDeletion} loading={loading} onClick={() => deleteVariables(selectedRowKeys)} type="primary">
-              Delete
-            </Button>
-          </>
-        }
-      </div>
       <div className="ant-table">
         <div className="ant-table-container">
           <div className="ant-table-content">

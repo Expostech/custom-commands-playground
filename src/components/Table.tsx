@@ -15,7 +15,7 @@ import {
   Row,
 } from 'react-table';
 
-import { ITableProps, IColumnFilter, IColumnSorter } from './TableInterfaces';
+import { ITableProps, IColumnFilter, IColumnSorter, IValidationError } from './TableInterfaces';
 
 import { SearchOutlined, DownOutlined } from '@ant-design/icons';
 
@@ -31,6 +31,15 @@ const ActionButton = styled.button`
   border-radius: 3px;
   display: inline;
   margin-right: 5px;
+  transition: 0.3ms;
+
+  :hover {
+    background-color: ${(props) => props.disabled ? '#737373' : '#0f83ff'};
+  }
+
+  :active {
+    background-color: ${(props) => props.disabled ? '#5e5e5e' : '#0071eb'};
+  }
 `;
 
 const ActionButtonDanger = styled.button`
@@ -39,6 +48,15 @@ const ActionButtonDanger = styled.button`
   border-color: ${(props) => props.disabled ? '#696969' : '#dc3545'};
   border-radius: 3px;
   display: inline;
+  transition: 0.3ms;
+
+  :hover {
+    background-color: ${(props) => props.disabled ? '#737373' : '#df4958'};
+  }
+
+  :active {
+    background-color: ${(props) => props.disabled ? '#5e5e5e' : '#d92638'};
+  }
 `;
 
 const SearchContainer = styled.div`
@@ -63,13 +81,22 @@ const SearchLabel = styled.span`
 
 const HeaderButton = styled.button<{danger: boolean}>`
   color: #fff;
-  background-color: ${(props) => props.danger ? '#dc3545' : '#007bff'};
-  border-color:${(props) => props.danger ? '#dc3545' : '#007bff'};
+  background-color: ${(props) => props.disabled ? '#696969' : props.danger ? '#dc3545' : '#007bff'};
+  border-color:${(props) => props.disabled ? '#696969' : props.danger ? '#dc3545' : '#007bff'};
   border-radius: 3px;
   display: inline;
   margin-right: 5px;
   margin-left: 5px;
   padding: 7px 15px;
+  transition: 0.3ms;
+
+  :hover {
+    background-color: ${(props) => props.disabled ? '#737373' : props.danger ? '#df4958' : '#0f83ff'};
+  }
+
+  :active {
+    background-color: ${(props) => props.disabled ? '#5e5e5e' : props.danger ? '#d92638' : '#0071eb'};
+  }
 `
 
 const SelectionLabel = styled.div`
@@ -207,7 +234,7 @@ const EditableCell = ({
     column: any;
     modifyTableData: Function;
     editableRowIndex: Number | null;
-    validationError: boolean;
+    validationError: IValidationError;
     setValidationError: Function;
     checkVariable: Function;
     rowIndexToKey: Function;
@@ -216,51 +243,151 @@ const EditableCell = ({
 
   const [inputError, setInputError] = useState(false);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-
-  const onBlur = async () => {
+  const validateInput = async (value: string) => {
     if (id === 'name') {
       const key: number = rowIndexToKey(index);
+
+      if (!value){
+        setInputError(true);
+
+        let error: IValidationError = {
+          row: 0,
+          name: false,
+          value: false
+        };
+
+        if (validationError !== null) {
+          error = {...validationError};
+          error.row = index;
+          error.name = true;
+        } else {
+          error.row = index;
+          error.name = true;
+        }
+
+        setValidationError({...error});
+        console.log("Error: Name length.");
+        return;
+      }
 
       if (key !== -1) {
         const isUnique: boolean = await checkVariable(value, key.toString());
         
         if (isUnique) {
           setInputError(false);
-          setValidationError(-1);
-        }
-        else {
+
+          if (validationError !== null) {
+            let error: IValidationError = {...validationError};
+            error.name = false;
+
+            if (error.value) {
+              setValidationError({...error});
+              console.log(258);
+            } else {
+              setValidationError(null);
+              return;
+            }
+          }
+
+          setValidationError(null);
+        } else {
           setInputError(true);
-          setValidationError(index);
+
+          let error: IValidationError = {
+            row: index,
+            name: true,
+            value: false
+          };
+  
+          if (validationError !== null) {
+            error = {...validationError};
+            error.row = index;
+            error.name = true;
+          }
+
+          setValidationError({...error});
         }
       }
     }
-    modifyTableData(index, id, value);
+
+    if (id === 'value') {
+      if (!value) {
+
+        let error: IValidationError = {
+          row: index,
+          name: false,
+          value: true
+        };
+
+        if (validationError !== null) {
+          error = {...validationError};
+          error.row = index;
+          error.value = true;
+        }
+
+        setInputError(true);
+        setValidationError({...error});
+      } else {
+        setInputError(false);
+
+        if (validationError !== null) {
+          let error: IValidationError = {...validationError};
+          error.value = false;
+
+          if (error.name) {
+            setValidationError({...error});
+          } else {
+            setValidationError(null);
+            return;
+          }
+        }
+
+        setValidationError(null);
+      }
+    }
+  }
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+    validateInput(e.target.value);
   };
+
+  const onBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+    modifyTableData(index, id, value);
+    validateInput(e.target.value);
+  }
 
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
 
   return index === editableRowIndex && id !== 'updatedAt' && id !== 'createdAt' ? (
-      <Input onBlur={onBlur} onChange={onChange} value={value} style={inputError ? { borderColor: '#ff4d4f' } : {}} />
+      <Input onBlur={onBlur} onChange={onChange} value={value} style={validationError !== null && validationError.name && id === 'name' || validationError !== null && validationError.value && id === 'value' ? { borderColor: '#ff4d4f' } : {}} />
   ) : (
     <p>{value}</p>
   );
 };
 
-function GlobalFilter({
+function GlobalFilter ({
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
   editableRowIndex,
+  loadVariables,
+  deleteVariables,
+  loading,
+  preventDeletion,
+  selectedRowKeys
 }: {
     preGlobalFilteredRows: any;
     globalFilter: any;
     setGlobalFilter: any;
     editableRowIndex: number | null;
+    loadVariables: Function;
+    deleteVariables: Function;
+    loading: boolean;
+    preventDeletion: boolean;
+    selectedRowKeys: Array<string | number>;
 }) {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = useState(globalFilter);
@@ -270,7 +397,7 @@ function GlobalFilter({
 
   return (
     <SearchContainer>
-      <HeaderButton danger={false}>Reload</HeaderButton>
+      <HeaderButton disabled={editableRowIndex !== null} danger={false} onClick={async () => loadVariables()}>Reload</HeaderButton>
       <HeaderSeparator/>
       <SearchLabel>Search:{' '}</SearchLabel>
       <Input
@@ -290,11 +417,11 @@ function GlobalFilter({
         disabled={editableRowIndex !== null}
       />
       <HeaderSeparator/>
-      <SelectionLabel>0 Items Selected</SelectionLabel>
+      <SelectionLabel>{preventDeletion ? "Locked Item(s) Selected!" : `${selectedRowKeys.length} Items Selected`}</SelectionLabel>
       <HeaderSeparator/>
-      <HeaderButton danger={false}>Unlock</HeaderButton>
-      <HeaderButton danger={false}>Lock</HeaderButton>
-      <HeaderButton danger={true}>Delete</HeaderButton>
+      <HeaderButton disabled={selectedRowKeys.length === 0} danger={false}>Unlock</HeaderButton>
+      <HeaderButton disabled={selectedRowKeys.length === 0} danger={false}>Lock</HeaderButton>
+      <HeaderButton disabled={selectedRowKeys.length === 0 || preventDeletion} danger={true} onClick={() => deleteVariables(selectedRowKeys)}>Delete</HeaderButton>
     </SearchContainer>
   );
 }
@@ -357,6 +484,13 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
     deleteVariable,
     checkVariable,
     rowIndexToKey,
+    loadVariables,
+    deleteVariables,
+    initialRowData,
+    setInitialRowData,
+    selectedRowKeys,
+    preventDeletion,
+    loading
   } = tableProps;
 
   let { currentPage } = tableProps;
@@ -402,6 +536,12 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
       setEditableRowIndex,
       activeDropdown,
       setActiveDropdown,
+      loadVariables,
+      deleteVariables,
+      initialRowData,
+      setInitialRowData,
+      selectedRowKeys,
+      preventDeletion,
       initialState: { pageIndex: currentPage },
       disableFilters: editableRowIndex !== null,
       disableSortBy: editableRowIndex !== null,
@@ -506,7 +646,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
           width: 320,
           minWidth: 320,
           maxWidth: 320,
-          Cell: ({ row, setEditableRowIndex, editableRowIndex, validationError, rowIndexToKey, editVariable, deleteVariable }) => (
+          Cell: ({ row, setEditableRowIndex, editableRowIndex, validationError, rowIndexToKey, editVariable, deleteVariable, initialRowData, setInitialRowData, modifyTableData}) => (
             <div>
               <ActionButton
                 onClick={() => {
@@ -515,7 +655,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                   editVariable(id.toString(), updatedRow.name, updatedRow.value, !updatedRow.preventDeletion);
                 }}
                 style={{ minWidth: 96.69 }}
-                disabled={validationError !== -1 || editableRowIndex !== null}
+                disabled={validationError !== null || editableRowIndex !== null}
               >
                 {row.values.preventDeletion ? 'Unlock' : 'Lock'}
               </ActionButton>
@@ -523,17 +663,20 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                 onClick={() => {
                   const currentIndex = row.index;
                   if (editableRowIndex !== currentIndex) {
+                      setInitialRowData(row.values);
                       setEditableRowIndex(currentIndex);
+                      console.log(row.values);
                   } else {
                     setEditableRowIndex(null);
                     const updatedRow = row.values;
                     const id: number = rowIndexToKey(row.index);
                     editVariable(id.toString(), updatedRow.name, updatedRow.value, updatedRow.preventDeletion);
                     setSkipPageReset(false);
+                    setInitialRowData(null);
                   }
                 }}
                 style={{ minWidth: 82.71 }}
-                disabled={validationError !== -1 || (editableRowIndex !== null && editableRowIndex !== row.index)}
+                disabled={validationError !== null || (editableRowIndex !== null && editableRowIndex !== row.index)}
               >
                 {editableRowIndex !== row.index ? 'Edit' : 'Save'}
               </ActionButton>
@@ -545,13 +688,20 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                     deleteVariable(id);
                   } else {
                     setEditableRowIndex(null);
-                    setValidationError(-1);
+                    setValidationError(null);
                     setSkipPageReset(false);
+                    if (initialRowData !== null) {
+                      const index: number = rowIndexToKey(row.index);
+                      modifyTableData(index, "name", initialRowData.name);
+                      modifyTableData(index, "value", initialRowData.value);
+                    }
+                    setInitialRowData(null);
+                    loadVariables();
                   }
                 }}
                 
                 style={{ minWidth: 96 }}
-                disabled={validationError !== -1 && validationError !== row.index || (editableRowIndex !== null && editableRowIndex !== row.index) || (row.values.preventDeletion === true && editableRowIndex !== row.index)}
+                disabled={validationError !== null && validationError.row !== row.index || (editableRowIndex !== null && editableRowIndex !== row.index) || (row.values.preventDeletion === true && editableRowIndex !== row.index)}
               >
                 {editableRowIndex !== row.index ? 'Delete' : 'Cancel'}
               </ActionButtonDanger>
@@ -661,6 +811,11 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
         preGlobalFilteredRows={preGlobalFilteredRows}
         setGlobalFilter={setGlobalFilter}
         editableRowIndex={editableRowIndex}
+        loadVariables={loadVariables}
+        deleteVariables={deleteVariables}
+        loading={loading}
+        preventDeletion={preventDeletion}
+        selectedRowKeys={selectedRowKeys}
       />
       <table {...getTableProps()}>
         <thead className="ant-table-thead">
