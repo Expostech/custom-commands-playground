@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { idText } from 'typescript';
 
 import { IOptionsContext } from './optionsContext';
 
@@ -77,6 +76,16 @@ export class HTTP {
 
     const response = await axios.get(this.getUrl('/variable/check').toString(), config);
 
+    return response.data;
+  }
+
+  async lockVariable(id: string, lock: boolean) {
+    const data = {
+      id: id,
+      lock: lock
+    }
+
+    const response =  await axios.put(this.getUrl(`/variable/lock`).toString(), data);
     return response.data;
   }
 

@@ -142,6 +142,14 @@ export const Variables: FC = () => {
     return response.isUnique;
   }
 
+  async function setVariableLock(ids: Array<string | number>, lock: boolean) {
+    const http = new HTTP(options);
+    await Promise.all(ids.map((id) => {
+      return http.lockVariable(id.toString(), lock);
+    }));
+    loadVariables();
+  }
+
   async function deleteVariables(ids: Array<string | number>) {
     const http = new HTTP(options);
     await Promise.all(ids.map((id) => {
@@ -256,6 +264,8 @@ export const Variables: FC = () => {
 
     loadVariables: loadVariables,
     deleteVariables: deleteVariables,
+
+    setVariableLock: setVariableLock,
   };
 
   function onChange(pageNumber: number, pageSize: number) {
