@@ -377,7 +377,8 @@ function GlobalFilter ({
   deleteVariables,
   loading,
   preventDeletion,
-  selectedRowKeys
+  selectedRowKeys,
+  setVariableLock
 }: {
     preGlobalFilteredRows: any;
     globalFilter: any;
@@ -388,6 +389,7 @@ function GlobalFilter ({
     loading: boolean;
     preventDeletion: boolean;
     selectedRowKeys: Array<string | number>;
+    setVariableLock: Function;
 }) {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = useState(globalFilter);
@@ -419,8 +421,8 @@ function GlobalFilter ({
       <HeaderSeparator/>
       <SelectionLabel>{preventDeletion ? "Locked Item(s) Selected!" : `${selectedRowKeys.length} Items Selected`}</SelectionLabel>
       <HeaderSeparator/>
-      <HeaderButton disabled={selectedRowKeys.length === 0} danger={false}>Unlock</HeaderButton>
-      <HeaderButton disabled={selectedRowKeys.length === 0} danger={false}>Lock</HeaderButton>
+      <HeaderButton disabled={selectedRowKeys.length === 0} danger={false} onClick={() => setVariableLock(selectedRowKeys, false)}>Unlock</HeaderButton>
+      <HeaderButton disabled={selectedRowKeys.length === 0} danger={false} onClick={() => setVariableLock(selectedRowKeys, true)}>Lock</HeaderButton>
       <HeaderButton disabled={selectedRowKeys.length === 0 || preventDeletion} danger={true} onClick={() => deleteVariables(selectedRowKeys)}>Delete</HeaderButton>
     </SearchContainer>
   );
@@ -490,7 +492,8 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
     setInitialRowData,
     selectedRowKeys,
     preventDeletion,
-    loading
+    loading,
+    setVariableLock
   } = tableProps;
 
   let { currentPage } = tableProps;
@@ -542,6 +545,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
       setInitialRowData,
       selectedRowKeys,
       preventDeletion,
+      setVariableLock,
       initialState: { pageIndex: currentPage },
       disableFilters: editableRowIndex !== null,
       disableSortBy: editableRowIndex !== null,
@@ -816,6 +820,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
         loading={loading}
         preventDeletion={preventDeletion}
         selectedRowKeys={selectedRowKeys}
+        setVariableLock={setVariableLock}
       />
       <table {...getTableProps()}>
         <thead className="ant-table-thead">

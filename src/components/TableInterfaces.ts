@@ -56,6 +56,8 @@ export interface ITableProps {
     deleteVariables: Function,
 
     rowIndexToKey: Function,
+
+    setVariableLock: Function,
 }
 
 export interface IColumnFilter {
