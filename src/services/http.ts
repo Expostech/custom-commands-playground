@@ -26,6 +26,10 @@ export interface IResponseData {
   totalEntries: number;
 }
 
+export interface IVariableCheckData {
+  isUnique: boolean;
+}
+
 export class HTTP {
   constructor(protected options: IOptionsContext) { }
 
@@ -60,6 +64,29 @@ export class HTTP {
     const response = await axios.get(this.getUrl('/variable').toString(), config);
 
     return response.data.result;
+  }
+
+  async checkVariable(name: string, id: string): Promise<IVariableCheckData> {
+    const config: AxiosRequestConfig = {
+      params: {
+        id: id,
+        name: name,
+      }
+    };
+
+    const response = await axios.get(this.getUrl('/variable/check').toString(), config);
+
+    return response.data;
+  }
+
+  async lockVariable(id: string, lock: boolean) {
+    const data = {
+      id: id,
+      lock: lock
+    }
+
+    const response =  await axios.put(this.getUrl(`/variable/lock`).toString(), data);
+    return response.data;
   }
 
   async editVariable(id: string, name: string, value: string, preventDeletion: boolean) {
