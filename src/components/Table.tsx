@@ -282,7 +282,7 @@ const EditableCell = ({
 
             if (error.value) {
               setValidationError({...error});
-              console.log(258);
+              return;
             } else {
               setValidationError(null);
               return;
@@ -336,6 +336,7 @@ const EditableCell = ({
 
           if (error.name) {
             setValidationError({...error});
+            return;
           } else {
             setValidationError(null);
             return;
