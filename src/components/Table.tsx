@@ -247,7 +247,7 @@ const EditableCell = ({
     if (id === 'name') {
       const key: number = rowIndexToKey(index);
 
-      if (!value){
+      if (!value || value.length > 255) {
         setInputError(true);
 
         let error: IValidationError = {
@@ -282,7 +282,7 @@ const EditableCell = ({
 
             if (error.value) {
               setValidationError({...error});
-              console.log(258);
+              return;
             } else {
               setValidationError(null);
               return;
@@ -311,7 +311,7 @@ const EditableCell = ({
     }
 
     if (id === 'value') {
-      if (!value) {
+      if (!value || value.length > 255) {
 
         let error: IValidationError = {
           row: index,
@@ -336,6 +336,7 @@ const EditableCell = ({
 
           if (error.name) {
             setValidationError({...error});
+            return;
           } else {
             setValidationError(null);
             return;
