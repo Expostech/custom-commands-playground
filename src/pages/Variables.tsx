@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { ITableProps, IColumnSorter, IColumnFilter, IValidationError } from '../components/TableInterfaces';
 
-import { Button, Pagination } from 'antd';
+import { Pagination } from 'antd';
 import { FC, useContext, useEffect, useState } from 'react';
 
 import { HTTP, IVariable } from '../services/http';
@@ -54,27 +54,31 @@ export const Variables: FC = () => {
       Header: 'Created',
       accessor: 'createdAt',
       disableFilters: true,
-      width: 180,
-      maxWidth: 180,
-      minWidth: 180
+      width: 190,
+      minWidth: 190,
+      maxWidth: undefined
     },
     {
       Header: 'Updated',
       accessor: 'updatedAt',
       disableFilters: true,
-      width: 180,
-      maxWidth: 180,
-      minWidth: 180
+      width: 190,
+      minWidth: 190,
+      maxWidth: undefined
     },
     {
       Header: 'Name',
       accessor: 'name',
-      width: 800,
+      width: undefined,
+      minWidth: undefined,
+      maxWidth: undefined
     },
     {
       Header: 'Value',
       accessor: 'value',
-      width: 800,
+      width: undefined,
+      minWidth: undefined,
+      maxWidth: undefined
     },
     {
       id: 'preventDeletion',
@@ -82,7 +86,9 @@ export const Variables: FC = () => {
       Header: 'Status',
       Cell: ({ value }) => value ? 'Locked' : 'Unlocked',
       disableFilters: true,
-      width: 200,
+      width: 150,
+      minWidth: 150,
+      maxWidth: undefined
     },
   ];
 
@@ -131,8 +137,6 @@ export const Variables: FC = () => {
     );
 
     setLoading(false);
-
-    console.log("Loading...");
   };
 
   const checkVariable = async (name: string, id: string) : Promise<boolean> => {
@@ -140,7 +144,7 @@ export const Variables: FC = () => {
     const response = await http.checkVariable(name, id);
 
     return response.isUnique;
-  }
+  };
 
   async function setVariableLock(ids: Array<string | number>, lock: boolean) {
     const http = new HTTP(options);
@@ -282,7 +286,7 @@ export const Variables: FC = () => {
           </div>
         </div>
         <PaginationWrapper>
-          <Pagination disabled={editableRowIndex !== null} defaultCurrent={1} onChange={onChange} showQuickJumper showSizeChanger size="default" total={totalEntries} />
+          <Pagination defaultCurrent={1} disabled={editableRowIndex !== null} onChange={onChange} showQuickJumper showSizeChanger size="default" total={totalEntries} />
         </PaginationWrapper>
       </div>
     </div>

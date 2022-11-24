@@ -1,7 +1,6 @@
 import { IVariable } from '../services/http';
 
 import { Column } from 'react-table';
-import { unique } from 'faker';
 
 export interface ITableProps {
     columns: Column[],
