@@ -17,12 +17,14 @@ import {
 
 import { ITableProps, IColumnFilter, IColumnSorter, IValidationError } from './TableInterfaces';
 
-import { SearchOutlined, DownOutlined } from '@ant-design/icons';
+import { SearchOutlined, DownOutlined, CaretDownFilled, CaretUpFilled, ExclamationCircleFilled } from '@ant-design/icons';
 
-import { Dropdown, Input, Menu } from 'antd';
+import { Dropdown, Input, Menu, Tooltip } from 'antd';
 
 import { debounce } from '../services/util/debounce';
 import { getConditionalSelectHeaderCheckboxProps } from '../services/GetConditionalSelectHeaderCheckboxProps';
+
+//TODO: Move all of the styled components to another file.
 
 const ActionButton = styled.button`
   color: #fff;
@@ -59,6 +61,19 @@ const ActionButtonDanger = styled.button`
   }
 `;
 
+const CollumnHeaderContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+const CellActionContainer = styled.div`
+  width: fit-content;
+`;
+
 const SearchContainer = styled.div`
   display: flex;
   border-bottom: 1px solid #f0f0f0;
@@ -68,8 +83,8 @@ const SearchContainer = styled.div`
   align-content: center;
   flex-direction: row;
   justify-content: flex-start;
+`;
 
-`
 const SearchLabel = styled.span`
   font-size: 16px;
   color: #000000d9;
@@ -77,7 +92,7 @@ const SearchLabel = styled.span`
   font-family: 'Raleway',sans-serif;
   margin-left: 5px;
   margin-right: 5px;
-`
+`;
 
 const HeaderButton = styled.button<{danger: boolean}>`
   color: #fff;
@@ -97,13 +112,13 @@ const HeaderButton = styled.button<{danger: boolean}>`
   :active {
     background-color: ${(props) => props.disabled ? '#5e5e5e' : props.danger ? '#d92638' : '#0071eb'};
   }
-`
+`;
 
 const SelectionLabel = styled.div`
   font-size: 16px;
   margin-left: 5px;
   margin-right: 5px;
-`
+`;
 
 const HeaderSeparator = styled.div`
   width: 1px;
@@ -112,47 +127,49 @@ const HeaderSeparator = styled.div`
   z-index: 100;
   margin-left: 5px;
   margin-right: 5px;
-`
+`;
 
-const Separator = styled.div`
-  position: absolute;
-  top: 50%;
-  right: 0;
+const Separator = styled.div<{displace: boolean | null}>`
   width: 1px;
   height: 1.6em;
+  margin-right: -16px;
+  margin-left: ${(props) => props.displace ? 'auto' : '16px'};
   background-color: rgba(0, 0, 0, 0.06);
-  transform: translateY(-50%);
   transition: background-color 0.3s;
   z-index: 100;
 `;
 
 const SortIndicatorAsc = styled.div<{ isSorted: boolean; isSortedDesc: boolean | undefined }>`
-    color: ${(props) => props.isSorted && !props.isSortedDesc ? '#1890ff' : 'black'};
     opacity: ${(props => props.isSorted && !props.isSortedDesc ? 1 : 0.3)};
     display: inline-block;
+
+    span svg path {
+      color: ${(props) => props.isSorted && !props.isSortedDesc ? '#1890ff' : 'black'};
+    }
 `;
 
 const SortIndicatorDesc = styled.div<{ isSortedDesc: boolean | undefined; }>`
-    color: ${(props) => props.isSortedDesc ? '#1890ff' : 'black'};
     opacity: ${(props => props.isSortedDesc ? 1 : 0.3)};
     display: inline-block;
+    
+    span svg path {
+      color: ${(props) => props.isSortedDesc ? '#1890ff' : 'black'};
+    }
 `;
 
-const SortIndicatorWrapper = styled.span`
-    position: absolute;
-    right: 0.5rem;
-    bottom: 0.95rem;
+const SortIndicatorContainer = styled.span<{ displace: boolean | undefined }>`
     font-size: 17px;
+    min-width: 34px;
+    margin-left: ${(props) => props.displace ? 'auto' : '5px'};
 `;
 
 const FilterDropdownButton = styled.span<{ isFiltered: boolean; }>`
   color: ${(props) => (props.isFiltered ? '#1890ff' : '#bfbfbf')};
 
-  position: absolute;
-
-  right: 1.7rem;
-
   padding: 0 4px;
+
+  margin-left: auto;
+
   border-radius: 2px;
 
   transition: all 0.3s;
@@ -182,6 +199,8 @@ const FilterDropdown = styled.div`
 
   right: 1rem;
 
+  top: 3rem;
+
   background-color: #fff;
 
   padding: 8px;
@@ -199,23 +218,66 @@ const FilterDropdown = styled.div`
 `;
 
 const SelectDropdownButton = styled.div`
-    position: absolute;
-    top: 1rem;
-    left: 2.3rem;
     cursor: pointer;
-    color: rgb(191, 191, 191);
 
-    span {
-        color: inherit;
-    }
-
-    span svg {
-        color: inherit;
-    }
+    margin-left: 5px;
 
     span svg path {
-        color: inherit;
+      color: rgb(191, 191, 191);
     }
+`;
+
+const CellInputContainer = styled.div<{validationError?: IValidationError | null, columnId: String}>`
+  width: 100%;
+  min-width: 0;
+  padding: 4px 11px;
+  font-size: 14px;
+  line-height: 1.5715;
+  transition: all 0.3s;
+  display: inline-flex;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+
+  border-color: ${(props) => (props.validationError && (props.validationError.name || props.validationError.isUnique) && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? 'rgb(255, 77, 79)' : ''};
+
+  :hover {
+    border-color: ${(props) => (props.validationError && (props.validationError.name || props.validationError.isUnique) && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? 'rgb(255, 77, 79)' : '#40a9ff'};
+  }
+
+  :focus-within {
+    z-index: 1;
+    border-color: ${(props) => (props.validationError && (props.validationError.name || props.validationError.isUnique) && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? 'rgb(255, 77, 79)' : '#40a9ff'};
+    box-shadow: ${(props) => (props.validationError && (props.validationError.name || props.validationError.isUnique) && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? '0px 0px 0px 2px rgb(255 77 79 / 20%)' : '0 0 0 2px rgb(24 144 255 / 20%);'};
+  }
+
+  input {
+    padding: 0;
+    border: none;
+    outline: none;
+    box-shadow: none;
+
+    :focus {
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+  }
+`;
+
+const CellInputSuffixContainer = styled.span<{validationError?: IValidationError | null, columnId: String}>`
+  margin-left: 4px;
+  display: flex;
+  flex: none;
+  align-items: center;
+
+  span {
+    visibility: ${(props) => (props.validationError && (props.validationError.name || props.validationError.isUnique) && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? '' : 'hidden'};
+  }
+
+  span svg path {
+    color: rgb(255,77,79);
+  }
 `;
 
 const EditableCell = ({
@@ -241,135 +303,154 @@ const EditableCell = ({
 }) => {
   const [value, setValue] = useState(initialValue);
 
-  const [inputError, setInputError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const validateInput = async (value: string) => {
+  async function validateInput(value:string) {
+    const invalidLength: string = 'Invalid Length';
+    const invalidName: string = 'Name is not Unique';
+
     if (id === 'name') {
+      if (!value || value.length > 255) {
+        if (validationError) {
+          const error: IValidationError = { ...validationError };
+          error.name = true;
+
+          setErrorMessage(invalidLength);
+          setValidationError({ ...error });
+          return;
+        }
+
+        const error: IValidationError = {
+          row: index,
+          isUnique: false,
+          name: true,
+          value: false
+        };
+
+        setErrorMessage(invalidLength);
+        setValidationError({ ...error });
+        return;
+      }
+
       const key: number = rowIndexToKey(index);
 
-      if (!value || value.length > 255) {
-        setInputError(true);
+      const isUnique: boolean = await checkVariable(value, key.toString());
 
-        let error: IValidationError = {
-          row: 0,
+      if (!isUnique) {
+        if (validationError) {
+          const error: IValidationError = { ...validationError };
+          error.isUnique = true;
+
+          setErrorMessage(invalidName);
+          setValidationError({ ...error });
+          return;
+        }
+
+        const error: IValidationError = {
+          row: index,
+          isUnique: true,
           name: false,
           value: false
         };
 
-        if (validationError !== null) {
-          error = {...validationError};
-          error.row = index;
-          error.name = true;
-        } else {
-          error.row = index;
-          error.name = true;
-        }
-
-        setValidationError({...error});
-        console.log("Error: Name length.");
+        setErrorMessage(invalidName);
+        setValidationError({ ...error });
         return;
       }
 
-      if (key !== -1) {
-        const isUnique: boolean = await checkVariable(value, key.toString());
-        
-        if (isUnique) {
-          setInputError(false);
+      if (validationError) {
+        const error: IValidationError = { ...validationError };
 
-          if (validationError !== null) {
-            let error: IValidationError = {...validationError};
-            error.name = false;
+        if (error.value) {
+          error.name = false;
+          error.isUnique = false;
 
-            if (error.value) {
-              setValidationError({...error});
-              return;
-            } else {
-              setValidationError(null);
-              return;
-            }
-          }
-
-          setValidationError(null);
-        } else {
-          setInputError(true);
-
-          let error: IValidationError = {
-            row: index,
-            name: true,
-            value: false
-          };
-  
-          if (validationError !== null) {
-            error = {...validationError};
-            error.row = index;
-            error.name = true;
-          }
-
-          setValidationError({...error});
+          setErrorMessage('');
+          setValidationError({ ...error });
+          return;
         }
+
+        setErrorMessage('');
+        setValidationError(null);
       }
     }
 
     if (id === 'value') {
       if (!value || value.length > 255) {
+        if (validationError) {
+          const error: IValidationError = { ...validationError };
+          error.value = true;
 
-        let error: IValidationError = {
+          setErrorMessage(invalidLength);
+          setValidationError({ ...error });
+          return;
+        }
+
+        const error: IValidationError = {
           row: index,
+          isUnique: false,
           name: false,
           value: true
         };
 
-        if (validationError !== null) {
-          error = {...validationError};
-          error.row = index;
-          error.value = true;
-        }
+        setErrorMessage(invalidLength);
+        setValidationError({ ...error });
+        return;
+      }
 
-        setInputError(true);
-        setValidationError({...error});
-      } else {
-        setInputError(false);
+      if (validationError) {
+        const error: IValidationError = { ...validationError };
 
-        if (validationError !== null) {
-          let error: IValidationError = {...validationError};
+        if (error.name || error.isUnique) {
           error.value = false;
 
-          if (error.name) {
-            setValidationError({...error});
-            return;
-          } else {
-            setValidationError(null);
-            return;
-          }
+          setErrorMessage('');
+          setValidationError({ ...error });
+          return;
         }
 
+        setErrorMessage('');
         setValidationError(null);
       }
     }
-  }
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-    validateInput(e.target.value);
   };
 
-  const onBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = useAsyncDebounce((value) => {
+    validateInput(value || undefined);
+  }, 150);
+
+  const onBlur = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    await validateInput(e.target.value);
     modifyTableData(index, id, value);
-    validateInput(e.target.value);
-  }
+  };
 
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
 
   return index === editableRowIndex && id !== 'updatedAt' && id !== 'createdAt' ? (
-      <Input onBlur={onBlur} onChange={onChange} value={value} style={validationError !== null && validationError.name && id === 'name' || validationError !== null && validationError.value && id === 'value' ? { borderColor: '#ff4d4f' } : {}} />
+    <CellInputContainer columnId={id} validationError={validationError}>
+      <Input
+        autoComplete={'off'}
+        id={`${index}-${id}`}
+        onBlur={onBlur}
+        onChange={(e) =>{
+          setValue(e.target.value);
+          onChange(e.target.value);
+        }}
+        value={value} />
+      <CellInputSuffixContainer columnId={id} validationError={validationError}>
+        <Tooltip title={errorMessage} >
+          <ExclamationCircleFilled />
+        </Tooltip>
+      </CellInputSuffixContainer>
+    </CellInputContainer>
   ) : (
     <p>{value}</p>
   );
 };
 
-function GlobalFilter ({
+function GlobalFilter({
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
@@ -400,11 +481,12 @@ function GlobalFilter ({
 
   return (
     <SearchContainer>
-      <HeaderButton disabled={editableRowIndex !== null} danger={false} onClick={async () => loadVariables()}>Reload</HeaderButton>
+      <HeaderButton danger={false} disabled={editableRowIndex !== null} onClick={async () => loadVariables()}>Reload</HeaderButton>
       <HeaderSeparator/>
       <SearchLabel>Search:{' '}</SearchLabel>
       <Input
         bordered={true}
+        disabled={editableRowIndex !== null}
         onChange={(e) => {
           setValue(e.target.value);
           onChange(e.target.value);
@@ -417,14 +499,13 @@ function GlobalFilter ({
           borderRadius: '3px',
         }}
         value={value || ''}
-        disabled={editableRowIndex !== null}
       />
       <HeaderSeparator/>
-      <SelectionLabel>{preventDeletion ? "Locked Item(s) Selected!" : `${selectedRowKeys.length} Items Selected`}</SelectionLabel>
+      <SelectionLabel>{preventDeletion ? 'Locked Item(s) Selected!' : `${selectedRowKeys.length} Items Selected`}</SelectionLabel>
       <HeaderSeparator/>
-      <HeaderButton disabled={editableRowIndex !== null || selectedRowKeys.length === 0} danger={false} onClick={() => setVariableLock(selectedRowKeys, false)}>Unlock</HeaderButton>
-      <HeaderButton disabled={editableRowIndex !== null || selectedRowKeys.length === 0} danger={false} onClick={() => setVariableLock(selectedRowKeys, true)}>Lock</HeaderButton>
-      <HeaderButton disabled={editableRowIndex !== null || selectedRowKeys.length === 0 || preventDeletion} danger={true} onClick={() => deleteVariables(selectedRowKeys)}>Delete</HeaderButton>
+      <HeaderButton danger={false} disabled={editableRowIndex !== null || selectedRowKeys.length === 0} onClick={() => setVariableLock(selectedRowKeys, false)}>Unlock</HeaderButton>
+      <HeaderButton danger={false} disabled={editableRowIndex !== null || selectedRowKeys.length === 0} onClick={() => setVariableLock(selectedRowKeys, true)}>Lock</HeaderButton>
+      <HeaderButton danger={true} disabled={editableRowIndex !== null || selectedRowKeys.length === 0 || preventDeletion} onClick={() => deleteVariables(selectedRowKeys)}>Delete</HeaderButton>
     </SearchContainer>
   );
 }
@@ -625,14 +706,14 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
             );
 
             return (
-              <div>
+              <>
                 <IndeterminateCheckbox id="multiSelect" {...indeterminateCheckboxProps} disabled={editableRowIndex !== null} />
                 <Dropdown overlay={menu} placement="bottomLeft" trigger={['click']}>
                   <SelectDropdownButton>
                     <DownOutlined />
                   </SelectDropdownButton>
                 </Dropdown>
-              </div>
+              </>
             );
           },
           Cell: ({ row }) => (
@@ -650,27 +731,28 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
           disableSortBy: true,
           width: 320,
           minWidth: 320,
-          maxWidth: 320,
-          Cell: ({ row, setEditableRowIndex, editableRowIndex, validationError, rowIndexToKey, editVariable, deleteVariable, initialRowData, setInitialRowData, modifyTableData}) => (
-            <div>
+          maxWidth: undefined,
+          Cell: ({ row, setEditableRowIndex, editableRowIndex, validationError, rowIndexToKey, editVariable, deleteVariable, initialRowData, setInitialRowData, modifyTableData }) => (
+            <CellActionContainer>
               <ActionButton
+                disabled={validationError || editableRowIndex !== null}
                 onClick={() => {
                   const id: number = rowIndexToKey(row.index);
                   const updatedRow = row.values;
                   editVariable(id.toString(), updatedRow.name, updatedRow.value, !updatedRow.preventDeletion);
                 }}
                 style={{ minWidth: 96.69 }}
-                disabled={validationError !== null || editableRowIndex !== null}
               >
                 {row.values.preventDeletion ? 'Unlock' : 'Lock'}
               </ActionButton>
               <ActionButton
+                disabled={validationError || (editableRowIndex !== null && editableRowIndex !== row.index)}
                 onClick={() => {
                   const currentIndex = row.index;
                   if (editableRowIndex !== currentIndex) {
-                      setInitialRowData(row.values);
-                      setEditableRowIndex(currentIndex);
-                      console.log(row.values);
+                    setInitialRowData(row.values);
+                    setEditableRowIndex(currentIndex);
+                    setValidationError(null);
                   } else {
                     setEditableRowIndex(null);
                     const updatedRow = row.values;
@@ -681,11 +763,12 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                   }
                 }}
                 style={{ minWidth: 82.71 }}
-                disabled={validationError !== null || (editableRowIndex !== null && editableRowIndex !== row.index)}
               >
                 {editableRowIndex !== row.index ? 'Edit' : 'Save'}
               </ActionButton>
               <ActionButtonDanger
+                disabled={(validationError && validationError.row !== row.index) || (editableRowIndex !== null && editableRowIndex !== row.index) || (row.values.preventDeletion === true && editableRowIndex !== row.index)}
+
                 onClick={() => {
                   const currentIndex = row.index;
                   if (editableRowIndex !== currentIndex) {
@@ -697,20 +780,18 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                     setSkipPageReset(false);
                     if (initialRowData !== null) {
                       const index: number = rowIndexToKey(row.index);
-                      modifyTableData(index, "name", initialRowData.name);
-                      modifyTableData(index, "value", initialRowData.value);
+                      modifyTableData(index, 'name', initialRowData.name);
+                      modifyTableData(index, 'value', initialRowData.value);
                     }
                     setInitialRowData(null);
                     loadVariables();
                   }
                 }}
-                
                 style={{ minWidth: 96 }}
-                disabled={validationError !== null && validationError.row !== row.index || (editableRowIndex !== null && editableRowIndex !== row.index) || (row.values.preventDeletion === true && editableRowIndex !== row.index)}
               >
                 {editableRowIndex !== row.index ? 'Delete' : 'Cancel'}
               </ActionButtonDanger>
-            </div>
+            </CellActionContainer>
           ),
         },
       ]);
@@ -746,10 +827,8 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
       }
 
       setColumnSorters(updatedSorters);
-      //goToPage(0);
     } else {
       setColumnSorters({});
-      //goToPage(0);
     }
   }, [sortBy]);
 
@@ -808,19 +887,21 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
     }
   }
 
+  //TODO: Table - Use functions to return & render table elements.
+
   // Render the UI for your table
   return (
     <>
       <GlobalFilter
-        globalFilter={globalFilter}
-        preGlobalFilteredRows={preGlobalFilteredRows}
-        setGlobalFilter={setGlobalFilter}
-        editableRowIndex={editableRowIndex}
-        loadVariables={loadVariables}
         deleteVariables={deleteVariables}
+        editableRowIndex={editableRowIndex}
+        globalFilter={globalFilter}
         loading={loading}
+        loadVariables={loadVariables}
+        preGlobalFilteredRows={preGlobalFilteredRows}
         preventDeletion={preventDeletion}
         selectedRowKeys={selectedRowKeys}
+        setGlobalFilter={setGlobalFilter}
         setVariableLock={setVariableLock}
       />
       <table {...getTableProps()}>
@@ -832,40 +913,43 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                   className="ant-table-cell"
                   {...column.getHeaderProps(
                     column.getSortByToggleProps({
+                      title: undefined,
                       style: {
-                        width: column.width,
-                        minWidth: column.minWidth,
-                        maxWidth: column.maxWidth,
+                        width: column.width !== undefined ? column.width : '',
+                        minWidth: column.minWidth !== undefined ? column.width : '',
+                        maxWidth: column.maxWidth !== undefined ? column.maxWidth : '',
                       },
                     })
                   )}
                 >
-                  {column.render('Header')}
                   {column.canFilter ? column.render('Filter') : null}
-                  {column.canSort ? (
-                    <SortIndicatorWrapper>
-                      <SortIndicatorAsc isSorted={column.isSorted} isSortedDesc={column.isSortedDesc} >
-                                                ↑
-                      </SortIndicatorAsc>
-                      <SortIndicatorDesc isSortedDesc={column.isSortedDesc} >
-                                                ↓
-                      </SortIndicatorDesc>
-                    </SortIndicatorWrapper>
-                  ) : null}
-                  {column.canFilter ? (
-                    <FilterDropdownButton
-                      isFiltered={column.filterValue !== undefined}
-                      onClick={(e: React.MouseEvent<HTMLElement>) =>
-                        toggleDropdown(e, column.id)
-                      }
-                    >
-                      <SearchOutlined />
-                    </FilterDropdownButton>
-                  ) : null}
+                  <CollumnHeaderContainer>
+                    {column.render('Header')}
+                    {column.canFilter ? (
+                      <FilterDropdownButton
+                        isFiltered={column.filterValue !== undefined}
+                        onClick={(e: React.MouseEvent<HTMLElement>) =>
+                          toggleDropdown(e, column.id)
+                        }
+                      >
+                        <SearchOutlined />
+                      </FilterDropdownButton>
+                    ) : null}
+                    {column.canSort ? (
+                      <SortIndicatorContainer displace={!column.canFilter} >
+                        <SortIndicatorAsc isSorted={column.isSorted} isSortedDesc={column.isSortedDesc} >
+                          <CaretUpFilled />
+                        </SortIndicatorAsc>
+                        <SortIndicatorDesc isSortedDesc={column.isSortedDesc} >
+                          <CaretDownFilled />
+                        </SortIndicatorDesc>
+                      </SortIndicatorContainer>
+                    ) : null}
 
-                  {i !== 0 && i + 1 !== headerGroup.headers.length ? (
-                    <Separator />
-                  ) : null}
+                    {i !== 0 && i + 1 !== headerGroup.headers.length ? (
+                      <Separator displace={!column.canFilter && !column.canSort}/>
+                    ) : null}
+                  </CollumnHeaderContainer>
                 </th>
               ))}
             </tr>

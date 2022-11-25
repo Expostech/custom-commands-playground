@@ -5,7 +5,8 @@
   "homepage": "/playground/",
   "scripts": {
     "start": "craco start",
-    "build": "DISABLE_ESLINT_PLUGIN=true craco build"
+    "prebuild": "node scripts/versionSetter.js",
+    "build": "craco build"
   },
   "dependencies": {
     "@craco/craco": "6.1.1",

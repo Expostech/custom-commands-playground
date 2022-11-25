@@ -83,9 +83,9 @@ export class HTTP {
     const data = {
       id: id,
       lock: lock
-    }
+    };
 
-    const response =  await axios.put(this.getUrl(`/variable/lock`).toString(), data);
+    const response = await axios.put(this.getUrl('/variable/lock').toString(), data);
     return response.data;
   }
 
