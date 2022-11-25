@@ -82,5 +82,6 @@ export interface IEditableCellProps {
 export interface IValidationError {
     row: number,
     name: boolean,
-    value: boolean
+    value: boolean,
+    isUnique?: boolean | undefined
 }

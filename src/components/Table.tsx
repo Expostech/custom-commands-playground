@@ -17,9 +17,9 @@ import {
 
 import { ITableProps, IColumnFilter, IColumnSorter, IValidationError } from './TableInterfaces';
 
-import { SearchOutlined, DownOutlined, CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
+import { SearchOutlined, DownOutlined, CaretDownFilled, CaretUpFilled, ExclamationCircleFilled } from '@ant-design/icons';
 
-import { Dropdown, Input, Menu } from 'antd';
+import { Dropdown, Input, Menu, Tooltip } from 'antd';
 
 import { debounce } from '../services/util/debounce';
 import { getConditionalSelectHeaderCheckboxProps } from '../services/GetConditionalSelectHeaderCheckboxProps';
@@ -227,18 +227,56 @@ const SelectDropdownButton = styled.div`
     }
 `;
 
-const CellInputContainer = styled.div<{validationError: IValidationError | null, columnId: String}>`
-  input {
-    border-color: ${(props) => (props.validationError && props.validationError.name && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? 'rgb(255, 77, 79)' : ''};
+const CellInputContainer = styled.div<{validationError?: IValidationError | null, columnId: String}>`
+  width: 100%;
+  min-width: 0;
+  padding: 4px 11px;
+  font-size: 14px;
+  line-height: 1.5715;
+  transition: all 0.3s;
+  display: inline-flex;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
 
-    :hover {
-      border-color: ${(props) => (props.validationError && props.validationError.name && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? 'rgb(255, 77, 79)' : '#40a9ff'};
-    }
+  border-color: ${(props) => (props.validationError && (props.validationError.name || props.validationError.isUnique) && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? 'rgb(255, 77, 79)' : ''};
+
+  :hover {
+    border-color: ${(props) => (props.validationError && (props.validationError.name || props.validationError.isUnique) && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? 'rgb(255, 77, 79)' : '#40a9ff'};
+  }
+
+  :focus-within {
+    z-index: 1;
+    border-color: ${(props) => (props.validationError && (props.validationError.name || props.validationError.isUnique) && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? 'rgb(255, 77, 79)' : '#40a9ff'};
+    box-shadow: ${(props) => (props.validationError && (props.validationError.name || props.validationError.isUnique) && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? '0px 0px 0px 2px rgb(255 77 79 / 20%)' : '0 0 0 2px rgb(24 144 255 / 20%);'};
+  }
+
+  input {
+    padding: 0;
+    border: none;
+    outline: none;
+    box-shadow: none;
 
     :focus {
-      border-color: ${(props) => (props.validationError && props.validationError.name && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? 'rgb(255, 77, 79)' : '#40a9ff'};
-      box-shadow: ${(props) => (props.validationError && props.validationError.name && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? '0px 0px 0px 2px rgb(255 77 79 / 20%)' : '0 0 0 2px rgb(24 144 255 / 20%);'};
+      border: none;
+      outline: none;
+      box-shadow: none;
     }
+  }
+`;
+
+const CellInputSuffixContainer = styled.span<{validationError?: IValidationError | null, columnId: String}>`
+  margin-left: 4px;
+  display: flex;
+  flex: none;
+  align-items: center;
+
+  span {
+    visibility: ${(props) => (props.validationError && (props.validationError.name || props.validationError.isUnique) && props.columnId === 'name') || (props.validationError && props.validationError.value && props.columnId === 'value') ? '' : 'hidden'};
+  }
+
+  span svg path {
+    color: rgb(255,77,79);
   }
 `;
 
@@ -265,23 +303,31 @@ const EditableCell = ({
 }) => {
   const [value, setValue] = useState(initialValue);
 
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
   async function validateInput(value:string) {
+    const invalidLength: string = 'Invalid Length';
+    const invalidName: string = 'Name is not Unique';
+
     if (id === 'name') {
       if (!value || value.length > 255) {
         if (validationError) {
           const error: IValidationError = { ...validationError };
           error.name = true;
 
+          setErrorMessage(invalidLength);
           setValidationError({ ...error });
           return;
         }
 
         const error: IValidationError = {
           row: index,
+          isUnique: false,
           name: true,
           value: false
         };
 
+        setErrorMessage(invalidLength);
         setValidationError({ ...error });
         return;
       }
@@ -293,19 +339,21 @@ const EditableCell = ({
       if (!isUnique) {
         if (validationError) {
           const error: IValidationError = { ...validationError };
+          error.isUnique = true;
 
-          error.name = true;
-
+          setErrorMessage(invalidName);
           setValidationError({ ...error });
           return;
         }
 
         const error: IValidationError = {
           row: index,
-          name: true,
+          isUnique: true,
+          name: false,
           value: false
         };
 
+        setErrorMessage(invalidName);
         setValidationError({ ...error });
         return;
       }
@@ -315,11 +363,14 @@ const EditableCell = ({
 
         if (error.value) {
           error.name = false;
+          error.isUnique = false;
 
+          setErrorMessage('');
           setValidationError({ ...error });
           return;
         }
 
+        setErrorMessage('');
         setValidationError(null);
       }
     }
@@ -330,16 +381,19 @@ const EditableCell = ({
           const error: IValidationError = { ...validationError };
           error.value = true;
 
+          setErrorMessage(invalidLength);
           setValidationError({ ...error });
           return;
         }
 
         const error: IValidationError = {
           row: index,
+          isUnique: false,
           name: false,
           value: true
         };
 
+        setErrorMessage(invalidLength);
         setValidationError({ ...error });
         return;
       }
@@ -347,13 +401,15 @@ const EditableCell = ({
       if (validationError) {
         const error: IValidationError = { ...validationError };
 
-        if (error.name) {
+        if (error.name || error.isUnique) {
           error.value = false;
 
+          setErrorMessage('');
           setValidationError({ ...error });
           return;
         }
 
+        setErrorMessage('');
         setValidationError(null);
       }
     }
@@ -375,6 +431,7 @@ const EditableCell = ({
   return index === editableRowIndex && id !== 'updatedAt' && id !== 'createdAt' ? (
     <CellInputContainer columnId={id} validationError={validationError}>
       <Input
+        autoComplete={'off'}
         id={`${index}-${id}`}
         onBlur={onBlur}
         onChange={(e) =>{
@@ -382,6 +439,11 @@ const EditableCell = ({
           onChange(e.target.value);
         }}
         value={value} />
+      <CellInputSuffixContainer columnId={id} validationError={validationError}>
+        <Tooltip title={errorMessage} >
+          <ExclamationCircleFilled />
+        </Tooltip>
+      </CellInputSuffixContainer>
     </CellInputContainer>
   ) : (
     <p>{value}</p>
