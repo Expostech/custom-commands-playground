@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import IndeterminateCheckbox from './IndeterminateCheckbox';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   useTable,
@@ -23,8 +23,13 @@ import { Dropdown, Input, Menu, Tooltip } from 'antd';
 
 import { debounce } from '../services/util/debounce';
 import { getConditionalSelectHeaderCheckboxProps } from '../services/GetConditionalSelectHeaderCheckboxProps';
+import { useIsOverflow } from '../hooks/useIsOverflow';
 
 //TODO: Move all of the styled components to another file.
+
+const FixedTable = styled.table`
+  table-layout: fixed;
+`;
 
 const ActionButton = styled.button`
   color: #fff;
@@ -280,6 +285,27 @@ const CellInputSuffixContainer = styled.span<{validationError?: IValidationError
   }
 `;
 
+const CellValue = styled.div<{hasOverflow: boolean | undefined}>`
+  overflow-x: auto;
+  overflow-wrap: normal;
+
+  margin-bottom: ${(props) => props.hasOverflow ? '-10px' : ''};
+
+  ::-webkit-scrollbar {
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+  }
+`;
+
 const EditableCell = ({
   value: initialValue,
   row: { index },
@@ -305,17 +331,25 @@ const EditableCell = ({
 
   const [errorMessage, setErrorMessage] = useState<string>('');
 
+  const ref = useRef(null);
+
+  const hasOverflow = useIsOverflow(ref, editableRowIndex);
+
   async function validateInput(value:string) {
-    const invalidLength: string = 'Invalid Length';
-    const invalidName: string = 'Name is not Unique';
+    const nameIsNotUnique: string = 'Name is not unique';
+    const nameIsTooShort: string = 'Name is too short';
+    const nameIsTooLong: string = 'Name is too long';
+
+    const valueIsTooShort: string = 'Value is too short';
+    const valueIsTooLong: string = 'Value is too long';
 
     if (id === 'name') {
-      if (!value || value.length > 255) {
+      if (!value || value.length > 250) {
         if (validationError) {
           const error: IValidationError = { ...validationError };
           error.name = true;
 
-          setErrorMessage(invalidLength);
+          setErrorMessage(value ? nameIsTooLong : nameIsTooShort);
           setValidationError({ ...error });
           return;
         }
@@ -327,7 +361,7 @@ const EditableCell = ({
           value: false
         };
 
-        setErrorMessage(invalidLength);
+        setErrorMessage(value ? nameIsTooLong : nameIsTooShort);
         setValidationError({ ...error });
         return;
       }
@@ -341,7 +375,7 @@ const EditableCell = ({
           const error: IValidationError = { ...validationError };
           error.isUnique = true;
 
-          setErrorMessage(invalidName);
+          setErrorMessage(nameIsNotUnique);
           setValidationError({ ...error });
           return;
         }
@@ -353,7 +387,7 @@ const EditableCell = ({
           value: false
         };
 
-        setErrorMessage(invalidName);
+        setErrorMessage(nameIsNotUnique);
         setValidationError({ ...error });
         return;
       }
@@ -376,12 +410,12 @@ const EditableCell = ({
     }
 
     if (id === 'value') {
-      if (!value || value.length > 255) {
+      if (!value || value.length > 250) {
         if (validationError) {
           const error: IValidationError = { ...validationError };
           error.value = true;
 
-          setErrorMessage(invalidLength);
+          setErrorMessage(value ? valueIsTooLong : valueIsTooShort);
           setValidationError({ ...error });
           return;
         }
@@ -393,7 +427,7 @@ const EditableCell = ({
           value: true
         };
 
-        setErrorMessage(invalidLength);
+        setErrorMessage(value ? valueIsTooLong : valueIsTooShort);
         setValidationError({ ...error });
         return;
       }
@@ -446,7 +480,7 @@ const EditableCell = ({
       </CellInputSuffixContainer>
     </CellInputContainer>
   ) : (
-    <p>{value}</p>
+    <CellValue hasOverflow={hasOverflow} ref={ref}>{value}</CellValue>
   );
 };
 
@@ -904,7 +938,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
         setGlobalFilter={setGlobalFilter}
         setVariableLock={setVariableLock}
       />
-      <table {...getTableProps()}>
+      <FixedTable {...getTableProps()}>
         <thead className="ant-table-thead">
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -971,7 +1005,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
             );
           })}
         </tbody>
-      </table>
+      </FixedTable>
     </>
   );
 }
