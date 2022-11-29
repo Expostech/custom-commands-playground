@@ -310,7 +310,7 @@ const EditableCell = ({
     const invalidName: string = 'Name is not Unique';
 
     if (id === 'name') {
-      if (!value || value.length > 255) {
+      if (!value || value.length > 250) {
         if (validationError) {
           const error: IValidationError = { ...validationError };
           error.name = true;
@@ -376,7 +376,7 @@ const EditableCell = ({
     }
 
     if (id === 'value') {
-      if (!value || value.length > 255) {
+      if (!value || value.length > 250) {
         if (validationError) {
           const error: IValidationError = { ...validationError };
           error.value = true;
