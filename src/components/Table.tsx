@@ -1064,7 +1064,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
       </FixedTable>
       {data.length === 0 &&
       <NoData>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+        <Empty description={globalFilter || filters.length > 0 ? 'No Results' : 'No Data'} image={Empty.PRESENTED_IMAGE_SIMPLE}/>
       </NoData>
       }
     </>
