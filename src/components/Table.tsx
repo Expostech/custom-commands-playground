@@ -1063,7 +1063,9 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
         </tbody>
       </FixedTable>
       {data.length === 0 &&
-      <NoData><Empty description={'No Data'}></Empty></NoData>
+      <NoData>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+      </NoData>
       }
     </>
   );
