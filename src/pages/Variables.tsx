@@ -13,7 +13,7 @@ import { Table } from '../components/Table';
 import { Column } from 'react-table';
 
 const PaginationWrapper = styled.div`
-  margin-top: 10px;
+  padding: 10px 0px;
   right: 0;
   position: absolute;
 `;
