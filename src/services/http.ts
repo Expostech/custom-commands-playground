@@ -48,15 +48,15 @@ export class HTTP {
     return url;
   }
 
-  async getVariables(page: number, pageSize: number, filteredColumns: string[], columnFilters: string[], sortedColumns: string[], columnSortTypes: string[], searchQuery: string): Promise<IResponseData> {
+  async getVariables(page: number, pageSize: number, filteredColumns: string[], columnFilters: string[], sortedColumn: string, columnSortType: string, searchQuery: string): Promise<IResponseData> {
     const config: AxiosRequestConfig = {
       params: {
         page: page,
         pageSize: pageSize,
         filteredColumns: filteredColumns,
         columnFilters: columnFilters,
-        sortedColumns: sortedColumns,
-        columnSortTypes: columnSortTypes,
+        sortedColumn: sortedColumn,
+        columnSortType: columnSortType,
         searchQuery: searchQuery
       }
     };

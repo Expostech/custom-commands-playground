@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { ITableProps, IColumnSorter, IColumnFilter, IValidationError } from '../components/TableInterfaces';
+import { ITableProps, IColumnFilter, IValidationError } from '../components/TableInterfaces';
 
 import { Pagination } from 'antd';
 import { FC, useContext, useEffect, useState } from 'react';
@@ -34,11 +34,13 @@ export const Variables: FC = () => {
 
   const [totalEntries, setTotalEntries] = useState<number>(0);
   const [pageCount, setPageCount] = useState<number>(0);
-  const [pageNumber, setPage] = useState<number>(0);
+  const [pageNumber, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
 
   const [columnFilters, setColumnFilters] = useState<IColumnFilter>({});
-  const [columnSorters, setColumnSorters] = useState<IColumnSorter>({});
+
+  const [sortedColumn, setSortedColumn] = useState<string>('');
+  const [sortType, setSortType] = useState<string>('');
 
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -110,15 +112,12 @@ export const Variables: FC = () => {
   const loadVariables = async () => {
     setLoading(true);
 
-    const sortedColumns: string[] = Object.keys(columnSorters);
-    const sortTypes: string[] = Object.values(columnSorters);
-
     const filteredColumns: string[] = Object.keys(columnFilters);
     const filterValues: string[] = Object.values(columnFilters);
 
     const http = new HTTP(options);
 
-    const responseData = await http.getVariables(pageNumber, pageSize, filteredColumns, filterValues, sortedColumns, sortTypes, searchQuery);
+    const responseData = await http.getVariables(pageNumber, pageSize, filteredColumns, filterValues, sortedColumn, sortType, searchQuery);
 
     setPageCount(responseData.pageCount);
     setTotalEntries(responseData.totalEntries);
@@ -189,7 +188,7 @@ export const Variables: FC = () => {
     if (editableRowIndex === null) {
       loadVariables();
     }
-  }, [pageNumber, pageSize, columnSorters, columnFilters, searchQuery]);
+  }, [pageNumber, pageSize, sortedColumn, sortType, columnFilters, searchQuery]);
 
   useEffect(() => {
     if (selectedRows.length > 0){
@@ -230,8 +229,11 @@ export const Variables: FC = () => {
     columnFilters: columnFilters,
     setColumnFilters: setColumnFilters,
 
-    columnSorters: columnSorters,
-    setColumnSorters: setColumnSorters,
+    sortedColumn: sortedColumn,
+    setSortedColumn: setSortedColumn,
+
+    sortType: sortType,
+    setSortType: setSortType,
 
     searchQuery: searchQuery,
     setSearchQuery: setSearchQuery,
@@ -273,7 +275,7 @@ export const Variables: FC = () => {
   };
 
   function onChange(pageNumber: number, pageSize: number) {
-    setPage(pageNumber - 1);
+    setPage(pageNumber);
     setPageSize(pageSize);
   }
 
