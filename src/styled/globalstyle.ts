@@ -28,6 +28,7 @@ export const GlobalStyle = createGlobalStyle<{ theme: ThemeType }>`
   #root {
     margin: 0 auto;
     overflow-x: hidden;
+    overflow-y: hidden;
   }
   *, a, p, div, li, h1, h2, h3, h4, h5, h6, header, footer {
     font-weight: 400; /* Default size */
