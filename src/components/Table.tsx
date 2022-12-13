@@ -15,7 +15,7 @@ import {
   Row,
 } from 'react-table';
 
-import { ITableProps, IColumnFilter, IColumnSorter, IValidationError } from './TableInterfaces';
+import { ITableProps, IColumnFilter, IValidationError } from './TableInterfaces';
 
 import { SearchOutlined, DownOutlined, CaretDownFilled, CaretUpFilled, ExclamationCircleFilled } from '@ant-design/icons';
 
@@ -648,7 +648,8 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
     setEditableRowIndex,
     validationError,
     setValidationError,
-    setColumnSorters,
+    setSortedColumn,
+    setSortType,
     setColumnFilters,
     modifyTableData,
     activeDropdown,
@@ -667,12 +668,6 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
     loading,
     setVariableLock
   } = tableProps;
-
-  let { currentPage } = tableProps;
-
-  if (currentPage === -1) {
-    currentPage = 0;
-  }
 
   const defaultColumn = {
     Filter: ColumnFilter,
@@ -718,10 +713,10 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
       selectedRowKeys,
       preventDeletion,
       setVariableLock,
-      initialState: { pageIndex: currentPage },
       disableFilters: editableRowIndex !== null,
       disableSortBy: editableRowIndex !== null,
       disableGlobalFilter: editableRowIndex !== null,
+      disableMultiSort: true
     },
     useFilters,
     useGlobalFilter,
@@ -890,10 +885,10 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
 
   function goToPage(page: number) {
     if (editableRowIndex === null) {
-      if (page > totalPages - 1) {
-        page = totalPages - 1;
-      } else if (page < 0) {
-        page = 0;
+      if (page > totalPages) {
+        page = totalPages;
+      } else if (page < 1) {
+        page = 1;
       }
 
       setPage(page);
@@ -906,19 +901,11 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
 
   useEffect(() => {
     if (sortBy.length > 0) {
-      const updatedSorters: IColumnSorter = {};
-
-      for (let i = 0; i < sortBy.length; i++) {
-        if (sortBy[i].desc === false) {
-          updatedSorters[sortBy[i].id] = 'ASC';
-        } else {
-          updatedSorters[sortBy[i].id] = 'DESC';
-        }
-      }
-
-      setColumnSorters(updatedSorters);
+      setSortedColumn(sortBy[0].id);
+      setSortType(sortBy[0].desc ? 'DESC' : 'ASC');
     } else {
-      setColumnSorters({});
+      setSortedColumn('');
+      setSortType('');
     }
   }, [sortBy]);
 

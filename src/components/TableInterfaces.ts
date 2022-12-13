@@ -20,11 +20,14 @@ export interface ITableProps {
     activeDropdown: string,
     setActiveDropdown: Function,
 
+    sortedColumn: string,
+    setSortedColumn: Function,
+
+    sortType: string,
+    setSortType: Function,
+
     columnFilters: IColumnFilter,
     setColumnFilters: Function,
-
-    columnSorters: IColumnSorter,
-    setColumnSorters: Function,
 
     skipPageReset: boolean,
     setSkipPageReset: Function,
