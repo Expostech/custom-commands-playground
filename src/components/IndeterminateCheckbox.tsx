@@ -4,6 +4,7 @@ import React, { useEffect, forwardRef } from 'react';
 interface Props {
   indeterminate?: boolean;
   id?: string
+  disabled?: boolean
 }
 
 const useCombinedRefs = (...refs: any[]): React.MutableRefObject<any> => {
@@ -37,7 +38,7 @@ const IndeterminateCheckbox = forwardRef<HTMLInputElement, Props>(
 
     return (
       <React.Fragment>
-        <Checkbox id={rest.id} ref={combinedRef} type="checkbox" {...rest} />
+        <Checkbox disabled={rest.disabled} id={rest.id} ref={combinedRef} type="checkbox" {...rest} />
       </React.Fragment>
     );
   }

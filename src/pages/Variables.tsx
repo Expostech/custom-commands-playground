@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-import { ITableProps, IColumnSorter, IColumnFilter } from '../components/TableInterfaces';
+import { ITableProps, IColumnFilter, IValidationError } from '../components/TableInterfaces';
 
-import { Button, Pagination } from 'antd';
+import { Pagination } from 'antd';
 import { FC, useContext, useEffect, useState } from 'react';
 
 import { HTTP, IVariable } from '../services/http';
@@ -13,7 +13,7 @@ import { Table } from '../components/Table';
 import { Column } from 'react-table';
 
 const PaginationWrapper = styled.div`
-  margin-top: 10px;
+  padding: 10px 0px;
   right: 0;
   position: absolute;
 `;
@@ -26,16 +26,21 @@ export const Variables: FC = () => {
   const [skipPageReset, setSkipPageReset] = useState<boolean>(false);
 
   const [editableRowIndex, setEditableRowIndex] = useState<number | null>(null);
+  const [initialRowData, setInitialRowData] = useState<{} | null>(null);
+
+  const [validationError, setValidationError] = useState<IValidationError | null>(null);
 
   const [loading, setLoading] = useState<boolean>(true);
 
   const [totalEntries, setTotalEntries] = useState<number>(0);
   const [pageCount, setPageCount] = useState<number>(0);
-  const [pageNumber, setPage] = useState<number>(0);
+  const [pageNumber, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
 
   const [columnFilters, setColumnFilters] = useState<IColumnFilter>({});
-  const [columnSorters, setColumnSorters] = useState<IColumnSorter>({});
+
+  const [sortedColumn, setSortedColumn] = useState<string>('');
+  const [sortType, setSortType] = useState<string>('');
 
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -51,27 +56,31 @@ export const Variables: FC = () => {
       Header: 'Created',
       accessor: 'createdAt',
       disableFilters: true,
-      width: 180,
-      maxWidth: 180,
-      minWidth: 180
+      width: 190,
+      minWidth: 190,
+      maxWidth: undefined
     },
     {
       Header: 'Updated',
       accessor: 'updatedAt',
       disableFilters: true,
-      width: 180,
-      maxWidth: 180,
-      minWidth: 180
+      width: 190,
+      minWidth: 190,
+      maxWidth: undefined
     },
     {
       Header: 'Name',
       accessor: 'name',
-      width: 800,
+      width: undefined,
+      minWidth: undefined,
+      maxWidth: undefined
     },
     {
       Header: 'Value',
       accessor: 'value',
-      width: 800,
+      width: undefined,
+      minWidth: undefined,
+      maxWidth: undefined
     },
     {
       id: 'preventDeletion',
@@ -79,7 +88,9 @@ export const Variables: FC = () => {
       Header: 'Status',
       Cell: ({ value }) => value ? 'Locked' : 'Unlocked',
       disableFilters: true,
-      width: 200,
+      width: 150,
+      minWidth: 150,
+      maxWidth: undefined
     },
   ];
 
@@ -101,15 +112,12 @@ export const Variables: FC = () => {
   const loadVariables = async () => {
     setLoading(true);
 
-    const sortedColumns: string[] = Object.keys(columnSorters);
-    const sortTypes: string[] = Object.values(columnSorters);
-
     const filteredColumns: string[] = Object.keys(columnFilters);
     const filterValues: string[] = Object.values(columnFilters);
 
     const http = new HTTP(options);
 
-    const responseData = await http.getVariables(pageNumber, pageSize, filteredColumns, filterValues, sortedColumns, sortTypes, searchQuery);
+    const responseData = await http.getVariables(pageNumber, pageSize, filteredColumns, filterValues, sortedColumn, sortType, searchQuery);
 
     setPageCount(responseData.pageCount);
     setTotalEntries(responseData.totalEntries);
@@ -129,6 +137,21 @@ export const Variables: FC = () => {
 
     setLoading(false);
   };
+
+  const checkVariable = async (name: string, id: string) : Promise<boolean> => {
+    const http = new HTTP(options);
+    const response = await http.checkVariable(name, id);
+
+    return response.isUnique;
+  };
+
+  async function setVariableLock(ids: Array<string | number>, lock: boolean) {
+    const http = new HTTP(options);
+    await Promise.all(ids.map((id) => {
+      return http.lockVariable(id.toString(), lock);
+    }));
+    loadVariables();
+  }
 
   async function deleteVariables(ids: Array<string | number>) {
     const http = new HTTP(options);
@@ -165,7 +188,7 @@ export const Variables: FC = () => {
     if (editableRowIndex === null) {
       loadVariables();
     }
-  }, [pageNumber, pageSize, columnSorters, columnFilters, searchQuery]);
+  }, [pageNumber, pageSize, sortedColumn, sortType, columnFilters, searchQuery]);
 
   useEffect(() => {
     if (selectedRows.length > 0){
@@ -206,8 +229,11 @@ export const Variables: FC = () => {
     columnFilters: columnFilters,
     setColumnFilters: setColumnFilters,
 
-    columnSorters: columnSorters,
-    setColumnSorters: setColumnSorters,
+    sortedColumn: sortedColumn,
+    setSortedColumn: setSortedColumn,
+
+    sortType: sortType,
+    setSortType: setSortType,
 
     searchQuery: searchQuery,
     setSearchQuery: setSearchQuery,
@@ -221,38 +247,40 @@ export const Variables: FC = () => {
     editableRowIndex: editableRowIndex,
     setEditableRowIndex: setEditableRowIndex,
 
+    initialRowData: initialRowData,
+    setInitialRowData: setInitialRowData,
+
+    validationError: validationError,
+    setValidationError: setValidationError,
+
     setSelectedRows: setSelectedRows,
+
+    selectedRowKeys: selectedRowKeys,
+    rowIndexToKey: rowIndexToKey,
 
     modifyTableData: modifyTableData,
 
     editVariable: editVariable,
     deleteVariable: deleteVariable,
+    checkVariable: checkVariable,
 
-    rowIndexToKey: rowIndexToKey
+    preventDeletion: preventDeletion,
+
+    loading: loading,
+
+    loadVariables: loadVariables,
+    deleteVariables: deleteVariables,
+
+    setVariableLock: setVariableLock,
   };
 
   function onChange(pageNumber: number, pageSize: number) {
-    setPage(pageNumber - 1);
+    setPage(pageNumber);
     setPageSize(pageSize);
   }
 
   return (
     <div>
-      <div style={{ marginBottom: 16 }}>
-        <Button loading={loading} onClick={loadVariables} type="primary">
-          Reload
-        </Button>
-        {selectedRowKeys.length > 0 &&
-          <>
-            <span style={{ margin: 8 }}>
-              {preventDeletion ? 'Locked item selected!' : `Selected ${selectedRowKeys.length} items`}
-            </span>
-            <Button danger disabled={preventDeletion} loading={loading} onClick={() => deleteVariables(selectedRowKeys)} type="primary">
-              Delete
-            </Button>
-          </>
-        }
-      </div>
       <div className="ant-table">
         <div className="ant-table-container">
           <div className="ant-table-content">
@@ -260,7 +288,7 @@ export const Variables: FC = () => {
           </div>
         </div>
         <PaginationWrapper>
-          <Pagination defaultCurrent={1} onChange={onChange} showQuickJumper showSizeChanger size="default" total={totalEntries} />
+          <Pagination defaultCurrent={1} disabled={editableRowIndex !== null} onChange={onChange} showQuickJumper showSizeChanger size="default" total={totalEntries} />
         </PaginationWrapper>
       </div>
     </div>

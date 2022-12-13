@@ -20,11 +20,14 @@ export interface ITableProps {
     activeDropdown: string,
     setActiveDropdown: Function,
 
+    sortedColumn: string,
+    setSortedColumn: Function,
+
+    sortType: string,
+    setSortType: Function,
+
     columnFilters: IColumnFilter,
     setColumnFilters: Function,
-
-    columnSorters: IColumnSorter,
-    setColumnSorters: Function,
 
     skipPageReset: boolean,
     setSkipPageReset: Function,
@@ -32,15 +35,31 @@ export interface ITableProps {
     editableRowIndex: number | null,
     setEditableRowIndex: Function,
 
+    validationError: IValidationError | null,
+    setValidationError: Function,
+
     setSelectedRows: Function,
+    selectedRowKeys: Array<string | number>,
+
+    setInitialRowData: Function,
+    initialRowData: {} | null,
+
+    preventDeletion: boolean,
 
     modifyTableData: Function,
 
     editVariable: Function,
-    
     deleteVariable: Function,
+    checkVariable: Function,
+
+    loading: boolean,
+
+    loadVariables: Function,
+    deleteVariables: Function,
 
     rowIndexToKey: Function,
+
+    setVariableLock: Function,
 }
 
 export interface IColumnFilter {
@@ -49,4 +68,23 @@ export interface IColumnFilter {
 
 export interface IColumnSorter {
     [columnId: string]: string;
+}
+
+export interface IEditableCellProps {
+    value: any;
+    row: any;
+    column: any;
+    modifyTableData: Function;
+    editableRowIndex: Number | null;
+    validationError: boolean;
+    setValidationError: Function;
+    checkVariable: Function;
+    rowIndexToKey: Function;
+}
+
+export interface IValidationError {
+    row: number,
+    name: boolean,
+    value: boolean,
+    isUnique?: boolean | undefined
 }
