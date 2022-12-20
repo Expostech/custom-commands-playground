@@ -19,8 +19,8 @@ export const Router: FC = () => (
       <Content>
         <Routes>
           <Route element={<Playground />} path="/:id/playground/editor" />
-          <Route element={<ContentContainer><Settings /></ContentContainer>} path="/:id/playground/settings" />
-          <Route element={<ContentContainer><Variables /></ContentContainer>} path="/:id/playground/variables" />
+          <Route element={<ContentContainer scrollOverflow={true}><Settings /></ContentContainer>} path="/:id/playground/settings" />
+          <Route element={<ContentContainer scrollOverflow={true}><Variables /></ContentContainer>} path="/:id/playground/variables" />
           <Route element={<Executions />} path="/:id/playground/executions" />
           <Route element={<PageNotFound />} path="*" />
         </Routes>
