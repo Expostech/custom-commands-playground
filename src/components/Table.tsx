@@ -43,7 +43,7 @@ const CellActionContainer = styled.div`
   width: fit-content;
 `;
 
-const SearchContainer = styled.div<{ reloadDisabled: boolean, loading: boolean }>`
+const SearchContainer = styled.div<{ reloadDisabled: number, loading: number }>`
   display: flex;
   border-bottom: 1px solid #f0f0f0;
   background-color: #fafafa;
@@ -561,7 +561,7 @@ function GlobalFilter({
   }, 200);
 
   return (
-    <SearchContainer loading={loading} reloadDisabled={editableRowIndex !== null}>
+    <SearchContainer loading={loading ? 1 : 0} reloadDisabled={editableRowIndex !== null ? 1 : 0}>
       <Button disabled={editableRowIndex !== null} loading={loading} onClick={() => loadVariables()}>Reload</Button>
       <HeaderSeparator/>
       <SearchLabel>Search:{' '}</SearchLabel>
