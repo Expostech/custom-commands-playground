@@ -56,16 +56,16 @@ export const Variables: FC = () => {
       Header: 'Created',
       accessor: 'createdAt',
       disableFilters: true,
-      width: 190,
-      minWidth: 190,
+      width: 220,
+      minWidth: 220,
       maxWidth: undefined
     },
     {
       Header: 'Updated',
       accessor: 'updatedAt',
       disableFilters: true,
-      width: 190,
-      minWidth: 190,
+      width: 220,
+      minWidth: 220,
       maxWidth: undefined
     },
     {
