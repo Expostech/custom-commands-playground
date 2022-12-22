@@ -751,7 +751,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                 case 'unlocked':
                   newProps = {
                     headerProps: props,
-                    checkIfRowIsSelectable: (row: Row) => row.cells[5].value !== true,
+                    checkIfRowIsSelectable: (row: Row) => row.cells[5].value !== 1,
                     shouldSelectPage: true
                   };
                   setIndeterminateCheckboxProps(getConditionalSelectHeaderCheckboxProps({ ...newProps }));
@@ -760,7 +760,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                 case 'locked':
                   newProps = {
                     headerProps: props,
-                    checkIfRowIsSelectable: (row: Row) => row.cells[5].value === true,
+                    checkIfRowIsSelectable: (row: Row) => row.cells[5].value === 1,
                     shouldSelectPage: true
                   };
                   setIndeterminateCheckboxProps(getConditionalSelectHeaderCheckboxProps({ ...newProps }));
