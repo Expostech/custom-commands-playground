@@ -257,9 +257,9 @@ const FilterDropdownButton = styled.span<{ isFiltered: boolean; }>`
 const FilterDropdown = styled.div`
   position: absolute;
 
-  right: 1rem;
+  right: 1em;
 
-  top: 3rem;
+  top: 3em;
 
   background-color: #fff;
 
@@ -272,7 +272,7 @@ const FilterDropdown = styled.div`
   box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014,
     0 9px 28px 8px #0000000d;
 
-  min-width: 20rem;
+  min-width: 20em;
 
   cursor: default;
 `;
@@ -979,7 +979,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                       title: undefined,
                       style: {
                         width: column.width !== undefined ? column.width : '',
-                        minWidth: column.minWidth !== undefined ? column.width : '',
+                        minWidth: column.minWidth !== undefined ? column.minWidth : '',
                         maxWidth: column.maxWidth !== undefined ? column.maxWidth : '',
                       },
                     })
