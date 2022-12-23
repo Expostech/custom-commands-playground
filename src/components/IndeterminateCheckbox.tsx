@@ -3,8 +3,8 @@ import React, { useEffect, forwardRef } from 'react';
 
 interface Props {
   indeterminate?: boolean;
-  id?: string
-  disabled?: boolean
+  id?: string;
+  disabled?: boolean;
 }
 
 const useCombinedRefs = (...refs: any[]): React.MutableRefObject<any> => {

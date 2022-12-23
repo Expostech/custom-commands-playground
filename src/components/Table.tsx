@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import IndeterminateCheckbox from './IndeterminateCheckbox';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   useTable,
@@ -23,7 +23,6 @@ import { Dropdown, Input, Menu, Tooltip, Button, Empty } from 'antd';
 
 import { debounce } from '../services/util/debounce';
 import { getConditionalSelectHeaderCheckboxProps } from '../services/GetConditionalSelectHeaderCheckboxProps';
-import { useIsOverflow } from '../hooks/useIsOverflow';
 
 //TODO: Move all of the styled components to another file.
 
@@ -44,7 +43,7 @@ const CellActionContainer = styled.div`
   width: fit-content;
 `;
 
-const SearchContainer = styled.div<{ reloadDisabled: boolean, loading: boolean }>`
+const SearchContainer = styled.div<{ reloadDisabled: number, loading: number }>`
   display: flex;
   border-bottom: 1px solid #f0f0f0;
   background-color: #fafafa;
@@ -258,9 +257,9 @@ const FilterDropdownButton = styled.span<{ isFiltered: boolean; }>`
 const FilterDropdown = styled.div`
   position: absolute;
 
-  right: 1rem;
+  right: 1em;
 
-  top: 3rem;
+  top: 3em;
 
   background-color: #fff;
 
@@ -273,7 +272,7 @@ const FilterDropdown = styled.div`
   box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014,
     0 9px 28px 8px #0000000d;
 
-  min-width: 20rem;
+  min-width: 20em;
 
   cursor: default;
 `;
@@ -312,6 +311,10 @@ const CellInputContainer = styled.div<{ validationError?: IValidationError | nul
     box-shadow: ${({ validationError, columnId }) => (validationError && (validationError.name || validationError.isUnique) && columnId === 'name') || (validationError && validationError.value && columnId === 'value') ? '0px 0px 0px 2px rgb(255 77 79 / 20%)' : '0 0 0 2px rgb(24 144 255 / 20%);'};
   }
 
+  input::selection {
+    background-color: #1a98ff;
+  }
+
   input {
     padding: 0;
     border: none;
@@ -341,25 +344,10 @@ const CellInputSuffixContainer = styled.span<{ validationError?: IValidationErro
   }
 `;
 
-const CellValue = styled.div<{ hasOverflow: boolean | undefined }>`
-  overflow-x: auto;
+const CellValue = styled.div`
+  text-overflow: ellipsis;
+  overflow-x: hidden;
   overflow-wrap: normal;
-
-  margin-bottom: ${({ hasOverflow }) => hasOverflow ? '-10px' : ''};
-
-  ::-webkit-scrollbar {
-    height: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 2px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 2px;
-  }
 `;
 
 const NoData = styled.div`
@@ -391,10 +379,6 @@ const EditableCell = ({
   const [value, setValue] = useState(initialValue);
 
   const [errorMessage, setErrorMessage] = useState<string>('');
-
-  const ref = useRef(null);
-
-  const hasOverflow = useIsOverflow(ref, editableRowIndex);
 
   async function validateInput(value:string) {
     const nameIsNotUnique: string = 'Name is not unique';
@@ -541,7 +525,9 @@ const EditableCell = ({
       </CellInputSuffixContainer>
     </CellInputContainer>
   ) : (
-    <CellValue hasOverflow={hasOverflow} ref={ref}>{value}</CellValue>
+    <CellValue>
+      {value}
+    </CellValue>
   );
 };
 
@@ -575,7 +561,7 @@ function GlobalFilter({
   }, 200);
 
   return (
-    <SearchContainer loading={loading} reloadDisabled={editableRowIndex !== null}>
+    <SearchContainer loading={loading ? 1 : 0} reloadDisabled={editableRowIndex !== null ? 1 : 0}>
       <Button disabled={editableRowIndex !== null} loading={loading} onClick={() => loadVariables()}>Reload</Button>
       <HeaderSeparator/>
       <SearchLabel>Search:{' '}</SearchLabel>
@@ -734,7 +720,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
           Header(props) {
             const [indeterminateCheckboxProps, setIndeterminateCheckboxProps] = useState(getConditionalSelectHeaderCheckboxProps({
               headerProps: props,
-              checkIfRowIsSelectable: (row: Row) => row.cells[5].value !== true,
+              checkIfRowIsSelectable: (row: Row) => row.cells[5].value !== 1,
               shouldSelectPage: true
             }));
 
@@ -765,7 +751,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                 case 'unlocked':
                   newProps = {
                     headerProps: props,
-                    checkIfRowIsSelectable: (row: Row) => row.cells[5].value !== true,
+                    checkIfRowIsSelectable: (row: Row) => row.cells[5].value !== 1,
                     shouldSelectPage: true
                   };
                   setIndeterminateCheckboxProps(getConditionalSelectHeaderCheckboxProps({ ...newProps }));
@@ -774,7 +760,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                 case 'locked':
                   newProps = {
                     headerProps: props,
-                    checkIfRowIsSelectable: (row: Row) => row.cells[5].value === true,
+                    checkIfRowIsSelectable: (row: Row) => row.cells[5].value === 1,
                     shouldSelectPage: true
                   };
                   setIndeterminateCheckboxProps(getConditionalSelectHeaderCheckboxProps({ ...newProps }));
@@ -814,8 +800,8 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
           Header: 'Actions',
           disableFilters: true,
           disableSortBy: true,
-          width: 320,
-          minWidth: 320,
+          width: 338,
+          minWidth: 338,
           maxWidth: undefined,
           Cell: ({ row, setEditableRowIndex, editableRowIndex, validationError, rowIndexToKey, editVariable, deleteVariable, initialRowData, setInitialRowData, modifyTableData }) => (
             <CellActionContainer>
@@ -826,7 +812,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                   const updatedRow = row.values;
                   editVariable(id.toString(), updatedRow.name, updatedRow.value, !updatedRow.preventDeletion);
                 }}
-                style={{ minWidth: 96.69 }}
+                style={{ minWidth: 104 }}
               >
                 {row.values.preventDeletion ? 'Unlock' : 'Lock'}
               </ActionButton>
@@ -847,13 +833,13 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                     setInitialRowData(null);
                   }
                 }}
-                style={{ minWidth: 82.71 }}
+                style={{ minWidth: 89 }}
               >
                 {editableRowIndex !== row.index ? 'Edit' : 'Save'}
               </ActionButton>
               <ActionButton
                 danger={true}
-                disabled={(validationError && validationError.row !== row.index) || (editableRowIndex !== null && editableRowIndex !== row.index) || (row.values.preventDeletion === true && editableRowIndex !== row.index)}
+                disabled={(validationError && validationError.row !== row.index) || (editableRowIndex !== null && editableRowIndex !== row.index) || (row.values.preventDeletion === 1 && editableRowIndex !== row.index)}
                 onClick={() => {
                   const currentIndex = row.index;
                   if (editableRowIndex !== currentIndex) {
@@ -872,7 +858,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                     loadVariables();
                   }
                 }}
-                style={{ minWidth: 96 }}
+                style={{ minWidth: 103 }}
               >
                 {editableRowIndex !== row.index ? 'Delete' : 'Cancel'}
               </ActionButton>
@@ -993,7 +979,7 @@ export function Table(tableProps: React.PropsWithChildren<ITableProps>) {
                       title: undefined,
                       style: {
                         width: column.width !== undefined ? column.width : '',
-                        minWidth: column.minWidth !== undefined ? column.width : '',
+                        minWidth: column.minWidth !== undefined ? column.minWidth : '',
                         maxWidth: column.maxWidth !== undefined ? column.maxWidth : '',
                       },
                     })
