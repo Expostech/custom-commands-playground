@@ -21,7 +21,7 @@ export const Editor: FC = () => {
     {
       name: 'Name',
       label: (<b>The name of the custom command.</b>),
-      placeholder: undefined,
+      placeholder: 'Command name',
       type: 'text',
       initialValue: undefined,
       validation: validation
@@ -29,7 +29,7 @@ export const Editor: FC = () => {
     {
       name: 'Description',
       label: (<b>This description is shown to players when they use the help command.</b>),
-      placeholder: undefined,
+      placeholder: 'No information given',
       type: 'text',
       initialValue: undefined,
       validation: validation
@@ -37,7 +37,7 @@ export const Editor: FC = () => {
     {
       name: 'Cost',
       label: (<b>How much players have to pay to execute this command.</b>),
-      placeholder: undefined,
+      placeholder: '0',
       type: 'number',
       initialValue: undefined,
       validation: validation
@@ -45,7 +45,7 @@ export const Editor: FC = () => {
     {
       name: 'Delay',
       label: (<b>Time in seconds players have to wait for this command to execute.</b>),
-      placeholder: undefined,
+      placeholder: '0',
       type: 'number',
       initialValue: undefined,
       validation: validation
@@ -53,15 +53,15 @@ export const Editor: FC = () => {
     {
       name: 'Timeout',
       label: (<b>Time in seconds players have to wait before executing this command again.</b>),
-      placeholder: undefined,
+      placeholder: '0',
       type: 'number',
       initialValue: undefined,
       validation: validation
     },
     {
       name: 'Role Level Required',
-      label: (<><b>Minimum permision level to execute this command.</b><br/><b>Note: This refers to CSMM roles. Not 7dtd admin permissions.</b></>),
-      placeholder: undefined,
+      label: (<><b>Minimum permision level to execute this command.</b><br/><b>Note:</b> This refers to CSMM roles. Not 7dtd admin permissions.</>),
+      placeholder: '9999',
       type: 'number',
       initialValue: undefined,
       validation: validation

@@ -17,6 +17,7 @@ const FieldContainer = styled.div`
 
 const FieldName = styled.div`
   font-size: 16px;
+  font-weight: 600;
   color: #DBD7D2;
 `;
 
