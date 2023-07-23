@@ -25,10 +25,6 @@ export interface IInputError {
 }
 
 const Field = styled.input<{type: string; inputError: IInputError | undefined }>`
-  input[type=text]{
-    background-color: blue;
-  }
-
   width: 100%;
 
   ::selection {
@@ -52,7 +48,7 @@ const Field = styled.input<{type: string; inputError: IInputError | undefined }>
 
   font-size: 16px;
 
-  padding: 6px 12px;
+  padding: 4px 8px;
 
   border-radius: 3px;
 
@@ -69,6 +65,10 @@ const FieldLabel = styled.div`
     color: #DBD7D2;
     font-size: 12px;
     margin-top: 5px;
+
+    b, i {
+      color: #DBD7D2;
+    }
 `;
 
 export interface IInputFieldProps {

@@ -20,7 +20,7 @@ export const Editor: FC = () => {
   [
     {
       name: 'Name',
-      label: 'The name of the custom command.',
+      label: (<b>The name of the custom command.</b>),
       placeholder: undefined,
       type: 'text',
       initialValue: undefined,
@@ -28,7 +28,7 @@ export const Editor: FC = () => {
     },
     {
       name: 'Description',
-      label: 'This description is shown to players when they use the help command.',
+      label: (<b>This description is shown to players when they use the help command.</b>),
       placeholder: undefined,
       type: 'text',
       initialValue: undefined,
@@ -36,7 +36,7 @@ export const Editor: FC = () => {
     },
     {
       name: 'Cost',
-      label: 'How much players have to pay to execute this command.',
+      label: (<b>How much players have to pay to execute this command.</b>),
       placeholder: undefined,
       type: 'number',
       initialValue: undefined,
@@ -44,7 +44,7 @@ export const Editor: FC = () => {
     },
     {
       name: 'Delay',
-      label: 'Time in seconds players have to wait for this command to execute.',
+      label: (<b>Time in seconds players have to wait for this command to execute.</b>),
       placeholder: undefined,
       type: 'number',
       initialValue: undefined,
@@ -52,7 +52,7 @@ export const Editor: FC = () => {
     },
     {
       name: 'Timeout',
-      label: ('Time in seconds players have to wait before executing this command again.'),
+      label: (<b>Time in seconds players have to wait before executing this command again.</b>),
       placeholder: undefined,
       type: 'number',
       initialValue: undefined,
@@ -60,7 +60,7 @@ export const Editor: FC = () => {
     },
     {
       name: 'Role Level Required',
-      label: (<>Minimum permision level to execute this command.<br/><b>Note:</b> <i>this refers to CSMM roles. Not 7dtd admin permissions.</i></>),
+      label: (<><b>Minimum permision level to execute this command.</b><br/><b>Note: This refers to CSMM roles. Not 7dtd admin permissions.</b></>),
       placeholder: undefined,
       type: 'number',
       initialValue: undefined,
@@ -69,7 +69,7 @@ export const Editor: FC = () => {
   ];
 
   const CustomCommandFormContainer = styled.div`
-    width:  428px;
+    width:  470px;
     height: 100vw;
     background-color: #292C2F;
     padding: 12px 12px;
